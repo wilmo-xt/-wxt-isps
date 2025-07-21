@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão do Tempo - Central Meteorológica</title>
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <style>
+        /* Weather Page Specific Styles */
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 50px 18px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--border-color-focus);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-primary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .weather-card {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-large);
+            overflow: hidden;
+            margin-top: 30px;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-large);
+        }
+
+        .weather-card.show {
+            display: block;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .weather-header {
+            background: var(--accent-primary);
+            padding: 30px 25px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .weather-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(180deg); }
+        }
+
+        .weather-city {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .weather-date {
+            font-size: 16px;
+            opacity: 0.9;
+            text-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .weather-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 25px;
+            background: rgba(255, 255, 255, 0.02);
+            gap: 25px;
+        }
+
+        .weather-temp {
+            font-size: 64px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+        }
+
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .weather-description {
+            text-align: center;
+            font-size: 20px;
+            padding: 20px 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid var(--border-color);
+            text-transform: capitalize;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1px;
+            background: var(--border-color);
+        }
+
+        .weather-detail {
+            background: var(--bg-card);
+            padding: 20px 15px;
+            text-align: center;
+            transition: var(--transition-smooth);
+        }
+
+        .weather-detail:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .detail-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .location-suggestions {
+            margin-top: 15px;
+        }
+
+        .suggestions-title {
+            font-size: 14px;
+            color: var(--text-accent);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .suggestions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+        }
+
+        .suggestion-btn {
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-small);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            text-align: center;
+        }
+
+        .suggestion-btn:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: var(--border-color-focus);
+            color: var(--text-primary);
+        }
+
+        .weather-forecast {
+            padding: 25px;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .forecast-title {
+            font-size: 18px;
+            color: var(--text-accent);
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 15px;
+        }
+
+        .forecast-item {
+            text-align: center;
+            padding: 15px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-small);
+            transition: var(--transition-smooth);
+        }
+
+        .forecast-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .forecast-day {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .forecast-icon {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .forecast-temp {
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .weather-main {
+                flex-direction: column;
+                gap: 15px;
+                padding: 30px 20px;
+            }
+            
+            .weather-temp {
+                font-size: 48px;
+            }
+            
+            .weather-icon {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .weather-details {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botão Voltar -->
+    <a href="javascript:history.back()" class="back-button">Voltar</a>
+
+    <div class="page-container">
+        <div class="main-container">
+            <div class="page-header">
+                <h1>🌤️ Central Meteorológica</h1>
+                <p>Informações climáticas detalhadas e precisas para qualquer localidade</p>
+            </div>
+            
+            <div class="page-content">
+                <div class="search-container">
+                    <div class="search-wrapper">
+                        <input type="text" id="cityInput" class="search-input" placeholder="Digite o nome da cidade..." />
+                        <button class="search-btn" id="searchBtn" onclick="getWeather()">🔍</button>
+                    </div>
+                </div>
+
+                <div class="location-suggestions">
+                    <div class="suggestions-title">🌍 Cidades Populares</div>
+                    <div class="suggestions-grid">
+                        <button class="suggestion-btn" onclick="searchCity('São Paulo')">São Paulo</button>
+                        <button class="suggestion-btn" onclick="searchCity('Rio de Janeiro')">Rio de Janeiro</button>
+                        <button class="suggestion-btn" onclick="searchCity('Brasília')">Brasília</button>
+                        <button class="suggestion-btn" onclick="searchCity('Salvador')">Salvador</button>
+                        <button class="suggestion-btn" onclick="searchCity('Fortaleza')">Fortaleza</button>
+                        <button class="suggestion-btn" onclick="searchCity('Belo Horizonte')">Belo Horizonte</button>
+                        <button class="suggestion-btn" onclick="searchCity('Manaus')">Manaus</button>
+                        <button class="suggestion-btn" onclick="searchCity('Curitiba')">Curitiba</button>
+                    </div>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Consultando dados meteorológicos...</div>
+                </div>
+                
+                <div class="error" id="error"></div>
+                
+                <div class="weather-card" id="weatherCard">
+                    <div class="weather-header">
+                        <div class="weather-city" id="weatherCity">São Paulo, BR</div>
+                        <div class="weather-date" id="weatherDate">Segunda, 18 de Julho</div>
+                    </div>
+                    
+                    <div class="weather-main">
+                        <div class="weather-temp" id="weatherTemp">25°C</div>
+                        <img src="https://openweathermap.org/img/wn/01d@2x.png" alt="Clima" class="weather-icon" id="weatherIcon">
+                    </div>
+                    
+                    <div class="weather-description" id="weatherDescription">Céu limpo</div>
+                    
+                    <div class="weather-details">
+                        <div class="weather-detail">
+                            <div class="detail-icon">🌡️</div>
+                            <div class="detail-label">Sensação Térmica</div>
+                            <div class="detail-value" id="feelsLike">27°C</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="detail-icon">💧</div>
+                            <div class="detail-label">Umidade</div>
+                            <div class="detail-value" id="humidity">65%</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="detail-icon">💨</div>
+                            <div class="detail-label">Vento</div>
+                            <div class="detail-value" id="wind">10 km/h</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="detail-icon">📊</div>
+                            <div class="detail-label">Pressão</div>
+                            <div class="detail-value" id="pressure">1015 hPa</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="detail-icon">🔽</div>
+                            <div class="detail-label">Mínima</div>
+                            <div class="detail-value" id="tempMin">20°C</div>
+                        </div>
+                        <div class="weather-detail">
+                            <div class="detail-icon">🔼</div>
+                            <div class="detail-label">Máxima</div>
+                            <div class="detail-value" id="tempMax">28°C</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const cityInput = document.getElementById('cityInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const weatherCard = document.getElementById('weatherCard');
+        
+        // Elementos do card de clima
+        const weatherCity = document.getElementById('weatherCity');
+        const weatherDate = document.getElementById('weatherDate');
+        const weatherTemp = document.getElementById('weatherTemp');
+        const weatherIcon = document.getElementById('weatherIcon');
+        const weatherDescription = document.getElementById('weatherDescription');
+        const feelsLike = document.getElementById('feelsLike');
+        const humidity = document.getElementById('humidity');
+        const wind = document.getElementById('wind');
+        const pressure = document.getElementById('pressure');
+        const tempMin = document.getElementById('tempMin');
+        const tempMax = document.getElementById('tempMax');
+
+        // Focus no input ao carregar
+        window.addEventListener('load', () => {
+            cityInput.focus();
+        });
+        
+        // Evento de tecla Enter no input
+        cityInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                getWeather();
+            }
+        });
+
+        function searchCity(cityName) {
+            cityInput.value = cityName;
+            getWeather();
+        }
+        
+        // Função para consultar o clima
+        async function getWeather() {
+            const city = cityInput.value.trim();
+            
+            if (!city) {
+                showError('Por favor, digite o nome de uma cidade.');
+                cityInput.focus();
+                return;
+            }
+            
+            loading.classList.add('show');
+            weatherCard.classList.remove('show');
+            hideError();
+            searchBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/weather?city=${encodeURIComponent(city)}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao consultar clima.');
+                }
+                
+                if (data.success) {
+                    displayWeather(data.data);
+                } else {
+                    throw new Error(data.error || 'Cidade não encontrada. Verifique o nome e tente novamente.');
+                }
+            } catch (err) {
+                console.error('Erro:', err);
+                showError(err.message || 'Erro de conexão. Verifique sua internet e tente novamente.');
+            } finally {
+                loading.classList.remove('show');
+                searchBtn.disabled = false;
+            }
+        }
+        
+        // Função para exibir os dados do clima
+        function displayWeather(data) {
+            // Formatar data atual
+            const date = new Date();
+            const options = { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long',
+                year: 'numeric'
+            };
+            const formattedDate = date.toLocaleDateString('pt-BR', options);
+            
+            // Atualizar elementos do card
+            weatherCity.textContent = `${data.city}, ${data.country}`;
+            weatherDate.textContent = formattedDate;
+            weatherTemp.textContent = `${data.temperature.current}°C`;
+            weatherIcon.src = `https://openweathermap.org/img/wn/${data.weather.icon}@2x.png`;
+            weatherIcon.alt = data.weather.description;
+            weatherDescription.textContent = data.weather.description;
+            feelsLike.textContent = `${data.temperature.feels_like}°C`;
+            humidity.textContent = `${data.humidity}%`;
+            wind.textContent = `${data.wind.speed} m/s`;
+            pressure.textContent = `${data.pressure} hPa`;
+            tempMin.textContent = `${data.temperature.min}°C`;
+            tempMax.textContent = `${data.temperature.max}°C`;
+            
+            // Mostrar o card
+            weatherCard.classList.add('show');
+            
+            // Scroll suave para o card
+            weatherCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Limpar input após busca bem-sucedida
+            setTimeout(() => {
+                cityInput.value = '';
+                cityInput.placeholder = `Última busca: ${data.city}`;
+            }, 1000);
+        }
+        
+        function showError(message) {
+            error.textContent = message;
+            error.classList.add('show');
+            setTimeout(() => error.classList.remove('show'), 5000);
+        }
+
+        function hideError() {
+            error.classList.remove('show');
+        }
+
+        // Sugestões dinâmicas no placeholder
+        const suggestions = [
+            'São Paulo', 'Rio de Janeiro', 'Brasília', 'Salvador',
+            'Fortaleza', 'Belo Horizonte', 'Manaus', 'Curitiba',
+            'Recife', 'Porto Alegre', 'Goiânia', 'Belém'
+        ];
+
+        let suggestionIndex = 0;
+        setInterval(() => {
+            if (!cityInput.value) {
+                cityInput.placeholder = `Digite uma cidade... (ex: ${suggestions[suggestionIndex]})`;
+                suggestionIndex = (suggestionIndex + 1) % suggestions.length;
+            }
+        }, 3000);
+
+        // Detectar localização do usuário (opcional)
+        if (navigator.geolocation) {
+            const locationBtn = document.createElement('button');
+            locationBtn.className = 'suggestion-btn';
+            locationBtn.textContent = '📍 Minha Localização';
+            locationBtn.onclick = () => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    getWeatherByCoords(lat, lon);
+                }, (error) => {
+                    showError('Não foi possível obter sua localização.');
+                });
+            };
+            document.querySelector('.suggestions-grid').appendChild(locationBtn);
+        }
+
+        async function getWeatherByCoords(lat, lon) {
+            loading.classList.add('show');
+            weatherCard.classList.remove('show');
+            hideError();
+            
+            try {
+                const response = await fetch(`/api/weather?lat=${lat}&lon=${lon}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayWeather(data.data);
+                } else {
+                    throw new Error(data.error || 'Erro ao consultar clima por localização.');
+                }
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                loading.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>

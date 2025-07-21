@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Gemini</title>
+  <link rel="stylesheet" href="/css/chat.css" />
+  <style>
+    .voltar-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: transparent;
+      border: none;
+      font-size: 18px;
+      cursor: pointer;
+      color: #333;
+    }
+
+    .voltar-btn:hover {
+      color: #007bff;
+    }
+
+    header {
+      position: relative;
+      padding-top: 40px; /* espaço para o botão voltar */
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-wrapper">
+    <header>
+      <button class="voltar-btn" onclick="history.back()">⬅ Voltar</button>
+      <h1>🤖 Chat Gemini</h1>
+      <button onclick="resetarConversa()">🔁 Resetar</button>
+    </header>
+
+    <div id="chat-box"></div>
+
+    <div class="input-area">
+      <textarea id="user-input" placeholder="Digite sua mensagem..."></textarea>
+      <button onclick="enviarMensagem()">Enviar</button>
+    </div>
+  </div>
+
+  <script src="/js/chat.js"></script>
+</body>
+</html>

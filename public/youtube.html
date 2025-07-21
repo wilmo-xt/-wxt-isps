@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Vídeos YouTube - Hub de Conteúdo</title>
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <style>
+        /* YouTube Page Specific Styles */
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 18px 50px 18px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-pill);
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(10px);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--border-color-focus);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-primary);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .videos-container {
+            display: none;
+        }
+
+        .videos-header {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-medium);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .videos-header h2 {
+            font-size: 24px;
+            color: var(--text-accent);
+            margin-bottom: 8px;
+        }
+
+        .videos-header p {
+            font-size: 16px;
+            color: var(--text-secondary);
+        }
+
+        .videos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .video-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-medium);
+            overflow: hidden;
+            transition: var(--transition-smooth);
+            backdrop-filter: blur(10px);
+        }
+
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-glow);
+            border-color: var(--border-color-focus);
+        }
+
+        .video-thumbnail {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%; /* 16:9 */
+            overflow: hidden;
+            background: var(--bg-card);
+        }
+
+        .video-thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+        }
+
+        .video-card:hover .video-thumbnail img {
+            transform: scale(1.05);
+        }
+
+        .video-duration {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .video-content {
+            padding: 20px;
+        }
+
+        .video-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .video-channel {
+            font-size: 12px;
+            color: var(--text-accent);
+            font-weight: 600;
+            background: rgba(102, 126, 234, 0.2);
+            padding: 4px 8px;
+            border-radius: var(--radius-pill);
+        }
+
+        .video-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .video-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .video-stat {
+            display: flex;
+            align-items: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            gap: 4px;
+        }
+
+        .video-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 15px;
+            background: var(--accent-primary);
+            border-radius: var(--radius-pill);
+            transition: var(--transition-smooth);
+        }
+
+        .video-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-small);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-medium);
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .no-results h3 {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .no-results p {
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .videos-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .video-card {
+                max-width: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Botão Voltar -->
+    <a href="javascript:history.back()" class="back-button">Voltar</a>
+
+    <div class="page-container">
+        <div class="main-container">
+            <div class="page-header">
+                <h1>🎬 Hub de Vídeos YouTube</h1>
+                <p>Descubra e explore conteúdo de vídeo de forma inteligente</p>
+            </div>
+            
+            <div class="page-content">
+                <div class="search-container">
+                    <div class="search-wrapper">
+                        <input type="text" id="queryInput" class="search-input" placeholder="Digite o que deseja buscar no YouTube..." />
+                        <button class="search-btn" id="searchBtn" onclick="searchVideos()">🔍</button>
+                    </div>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Buscando vídeos incríveis para você...</div>
+                </div>
+                
+                <div class="error" id="error"></div>
+                
+                <div class="no-results" id="noResults">
+                    <h3>🔍 Nenhum vídeo encontrado</h3>
+                    <p>Tente buscar com outros termos ou verifique a ortografia.</p>
+                </div>
+                
+                <div class="videos-container" id="videosContainer">
+                    <div class="videos-header">
+                        <h2 id="resultsTitle">Resultados para "termo"</h2>
+                        <p id="resultsCount">Vídeos encontrados</p>
+                    </div>
+                    
+                    <div class="videos-grid" id="videosList">
+                        <!-- Vídeos serão inseridos aqui dinamicamente -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const queryInput = document.getElementById('queryInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const videosContainer = document.getElementById('videosContainer');
+        const noResults = document.getElementById('noResults');
+        const resultsTitle = document.getElementById('resultsTitle');
+        const resultsCount = document.getElementById('resultsCount');
+        const videosList = document.getElementById('videosList');
+        
+        // Evento de tecla Enter no input
+        queryInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchVideos();
+            }
+        });
+
+        // Focus no input ao carregar
+        window.addEventListener('load', () => {
+            queryInput.focus();
+        });
+        
+        // Função para buscar vídeos
+        async function searchVideos() {
+            const query = queryInput.value.trim();
+            
+            if (!query) {
+                showError('Por favor, digite um termo para buscar vídeos.');
+                queryInput.focus();
+                return;
+            }
+            
+            // Mostrar loading e esconder outros elementos
+            loading.classList.add('show');
+            videosContainer.style.display = 'none';
+            noResults.style.display = 'none';
+            hideError();
+            searchBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`/api/youtube?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao buscar vídeos.');
+                }
+                
+                if (data.success && data.count > 0) {
+                    displayVideos(data.data, query);
+                } else {
+                    noResults.style.display = 'block';
+                }
+            } catch (err) {
+                console.error('Erro na busca:', err);
+                showError(err.message || 'Erro de conexão. Verifique sua internet e tente novamente.');
+            } finally {
+                loading.classList.remove('show');
+                searchBtn.disabled = false;
+            }
+        }
+        
+        // Função para exibir os vídeos
+        function displayVideos(videos, query) {
+            // Limpar lista de vídeos
+            videosList.innerHTML = '';
+            
+            // Atualizar título e contagem
+            resultsTitle.textContent = `📺 Resultados para "${query}"`;
+            resultsCount.textContent = `${videos.length} vídeo${videos.length !== 1 ? 's' : ''} encontrado${videos.length !== 1 ? 's' : ''}`;
+            
+            // Criar cards de vídeos
+            videos.forEach((video, index) => {
+                const card = createVideoCard(video, index);
+                videosList.appendChild(card);
+            });
+            
+            // Mostrar container de vídeos
+            videosContainer.style.display = 'block';
+            
+            // Scroll suave para os resultados
+            videosContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Função para criar um card de vídeo
+        function createVideoCard(video, index) {
+            const card = document.createElement('div');
+            card.className = 'video-card';
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            // Formatar duração
+            const duration = formatDuration(video.duration);
+            
+            // Formatar data
+            const publishedDate = new Date(video.timestamp);
+            const formattedDate = publishedDate.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            
+            // Limitar descrição
+            const description = video.description ? 
+                (video.description.length > 120 ? video.description.substring(0, 120) + '...' : video.description) : 
+                'Sem descrição disponível.';
+            
+            // HTML do card
+            card.innerHTML = `
+                <div class="video-thumbnail">
+                    <img src="${video.thumbnail}" alt="${video.title}" loading="lazy">
+                    <div class="video-duration">${duration}</div>
+                </div>
+                <div class="video-content">
+                    <div class="video-info">
+                        <span class="video-channel">${video.author?.name || 'Canal desconhecido'}</span>
+                        <span class="video-date">${formattedDate}</span>
+                    </div>
+                    <h3 class="video-title">${video.title}</h3>
+                    <p class="video-description">${description}</p>
+                    <div class="video-stats">
+                        <div class="video-stat">
+                            <span>👁️</span> ${formatNumber(video.views)} visualizações
+                        </div>
+                        <div class="video-stat">
+                            <span>⏱️</span> ${duration}
+                        </div>
+                    </div>
+                    <a href="${video.url}" target="_blank" rel="noopener noreferrer" class="video-link">
+                        <span>▶️</span> Assistir no YouTube
+                    </a>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Função para formatar duração
+        function formatDuration(seconds) {
+            if (!seconds || seconds === 0) return '00:00';
+            
+            const hours = Math.floor(seconds / 3600);
+            const minutes = Math.floor((seconds % 3600) / 60);
+            const secs = seconds % 60;
+            
+            if (hours > 0) {
+                return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            } else {
+                return `${minutes}:${secs.toString().padStart(2, '0')}`;
+            }
+        }
+        
+        // Função para formatar números
+        function formatNumber(num) {
+            if (!num || num === 0) return '0';
+            
+            if (num >= 1000000000) {
+                return (num / 1000000000).toFixed(1) + 'B';
+            } else if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            } else {
+                return num.toString();
+            }
+        }
+        
+        // Função para exibir mensagem de erro
+        function showError(message) {
+            error.textContent = message;
+            error.classList.add('show');
+            setTimeout(() => {
+                error.classList.remove('show');
+            }, 5000);
+        }
+
+        function hideError() {
+            error.classList.remove('show');
+        }
+
+        // Sugestões de busca (opcional)
+        const suggestions = [
+            'música relaxante', 'tutoriais de programação', 'documentários', 
+            'receitas fáceis', 'exercícios em casa', 'dicas de produtividade'
+        ];
+
+        // Placeholder dinâmico
+        let placeholderIndex = 0;
+        setInterval(() => {
+            queryInput.placeholder = `Digite o que deseja buscar... (ex: ${suggestions[placeholderIndex]})`;
+            placeholderIndex = (placeholderIndex + 1) % suggestions.length;
+        }, 3000);
+    </script>
+</body>
+</html>

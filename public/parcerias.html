@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wxt tools - Parcerias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Header com Logo - Igual ao menu melhorado */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .header:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        /* Logo melhorada - igual ao menu */
+        .logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: 3px solid rgba(102, 126, 234, 0.6);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .logo:hover {
+            transform: scale(1.1);
+            border-color: rgba(102, 126, 234, 0.9);
+            box-shadow: 0 0 30px rgba(102, 126, 234, 0.5);
+        }
+
+        /* Botão de voltar */
+        .back-button {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 12px;
+            cursor: pointer;
+            padding: 12px 20px;
+            transition: all 0.3s ease;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.6);
+            transform: scale(1.05);
+        }
+
+        /* Container principal */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: calc(100vh - 90px);
+        }
+
+        /* Card principal */
+        .main-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Título da página */
+        .page-title {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title h1 {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .page-title p {
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Seções */
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .section-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        /* Grid de canais do YouTube */
+        .youtube-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .youtube-card {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 0, 0, 0.05));
+            border: 2px solid rgba(255, 0, 0, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .youtube-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .youtube-card:hover::before {
+            left: 100%;
+        }
+
+        .youtube-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 0, 0, 0.4);
+            box-shadow: 0 15px 35px rgba(255, 0, 0, 0.2);
+        }
+
+        .youtube-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .youtube-icon {
+            font-size: 24px;
+            color: #ff0000;
+        }
+
+        .youtube-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .youtube-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .youtube-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: #fff;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .youtube-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3);
+        }
+
+        /* Grid de downloads */
+        .downloads-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .download-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(102, 126, 234, 0.05));
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .download-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .download-card:hover::before {
+            left: 100%;
+        }
+
+        .download-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(102, 126, 234, 0.4);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.2);
+        }
+
+        .download-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .download-icon {
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .download-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .download-description {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .download-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .download-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header {
+                padding: 12px 20px;
+            }
+
+            .logo {
+                width: 45px;
+                height: 45px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .main-card {
+                padding: 30px 20px;
+            }
+
+            .page-title h1 {
+                font-size: 28px;
+            }
+
+            .section-title {
+                font-size: 24px;
+            }
+
+            .youtube-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .downloads-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .back-button {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+
+            .youtube-card, .download-card {
+                padding: 20px;
+            }
+        }
+
+        /* Animações de entrada */
+        .youtube-card, .download-card {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideInCard 0.6s ease forwards;
+        }
+
+        .youtube-card:nth-child(1) { animation-delay: 0.1s; }
+        .youtube-card:nth-child(2) { animation-delay: 0.2s; }
+        .download-card:nth-child(1) { animation-delay: 0.3s; }
+        .download-card:nth-child(2) { animation-delay: 0.4s; }
+        .download-card:nth-child(3) { animation-delay: 0.5s; }
+        .download-card:nth-child(4) { animation-delay: 0.6s; }
+        .download-card:nth-child(5) { animation-delay: 0.7s; }
+        .download-card:nth-child(6) { animation-delay: 0.8s; }
+
+        @keyframes slideInCard {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <img src="https://i.ibb.co/fdLYFS49/logo.png" alt="Logo" class="logo">
+        <a href="main.html" class="back-button">
+            <span>←</span>
+            <span>Voltar</span>
+        </a>
+    </div>
+
+    <!-- Container Principal -->
+    <div class="container">
+        <div class="main-card">
+            <!-- Título da Página -->
+            <div class="page-title">
+                <h1>🤝 Parcerias</h1>
+                <p>Conheça nossos canais parceiros e acesse nossos projetos e downloads exclusivos.</p>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SEÇÃO CANAIS PARCEIROS DO YOUTUBE -->
+            <!-- ========================================== -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">🎥</span>
+                    Canais Parceiros do YouTube
+                </h2>
+                
+                <div class="youtube-grid">
+                    <!-- ==================== CANAL PARCEIRO 1 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU PRIMEIRO CANAL PARCEIRO -->
+                    <div class="youtube-card">
+                        <div class="youtube-header">
+                            <span class="youtube-icon">📺</span>
+                            <h3 class="youtube-title">Spiderpool</h3>
+                        </div>
+                        <p class="youtube-description">
+                            Videos interativos para assistir e passar tempo e si divertir am qualquer hora não perca tempo clique embaixo e divirtam-se.
+                        </p>
+                        <a href="https://youtube.com/@spiderpool2025?si=kBMUpU1gcWoxAdKa" class="youtube-link" target="_blank">
+                            <span>🎬</span>
+                            <span>Visitar Canal</span>
+                        </a>
+                    </div>
+
+                    <!-- ==================== CANAL PARCEIRO 2 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU SEGUNDO CANAL PARCEIRO -->
+                    <div class="youtube-card">
+                        <div class="youtube-header">
+                            <span class="youtube-icon">📺</span>
+                            <h3 class="youtube-title">Wilmo wxt</h3>
+                        </div>
+                        <p class="youtube-description">
+                            Esse canal pertence ao criador desse site é um canal focado em ensinar programação JavaScript criação de bots e muito mais confira clicando em visitar.
+                        </p>
+                        <a href="https://youtube.com/@wilmoxt?si=uAj34mFllUlR__UY" class="youtube-link" target="_blank">
+                            <span>🎬</span>
+                            <span>Visitar Canal</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- SEÇÃO DOWNLOADS E LINKS -->
+            <!-- ========================================== -->
+            <div class="section">
+                <h2 class="section-title">
+                    <span class="section-icon">📁</span>
+                    Downloads e Links
+                </h2>
+                
+                <div class="downloads-grid">
+                    <!-- ==================== DOWNLOAD/LINK 1 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU PRIMEIRO PROJETO/DOWNLOAD -->
+                    <div class="download-card">
+                        <div class="download-header">
+                            <span class="download-icon">📱</span>
+                            <h3 class="download-title">Em Breve </h3>
+                        </div>
+                        <p class="download-description">
+                            Em breve sera disponibilizado o conteúdo para essa secção fique atento.
+                        </p>
+                        <a href="vazio/link/aqui" class="download-link" target="_blank">
+                            <span>⬇️</span>
+                            <span>Baixar em breve</span>
+                        </a>
+                    </div>
+
+                    <!-- ==================== DOWNLOAD/LINK 2 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU SEGUNDO PROJETO/DOWNLOAD -->
+                    <div class="download-card">
+                        <div class="download-header">
+                            <span class="download-icon">🎥</span>
+                            <h3 class="download-title">Tutorial Completo</h3>
+                        </div>
+                        <p class="download-description">
+                            Em breve sera disponibilizado o conteúdo para essa secção fique atento.
+                        </p>
+                        <a href="https://youtube.com/watch?v=seu-video-tutorial" class="download-link" target="_blank">
+                            <span>▶️</span>
+                            <span>Assistir brevemente</span>
+                        </a>
+                    </div>
+
+                    <!-- ==================== DOWNLOAD/LINK 3 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU TERCEIRO PROJETO/DOWNLOAD -->
+                    <div class="download-card">
+                        <div class="download-header">
+                            <span class="download-icon">💻</span>
+                            <h3 class="download-title">Código Fonte</h3>
+                        </div>
+                        <p class="download-description">
+                          Em breve sera disponibilizado o conteúdo para essa secção fique atento..
+                        </p>
+                        <a href="https://github.com/usuario/ocr-app" class="download-link" target="_blank">
+                            <span>🔗</span>
+                            <span>GitHub Brevemente</span>
+                        </a>
+                    </div>
+
+                    <!-- ==================== DOWNLOAD/LINK 4 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU QUARTO PROJETO/DOWNLOAD -->
+                    <div class="download-card">
+                        <div class="download-header">
+                            <span class="download-icon">📄</span>
+                            <h3 class="download-title">Documentação</h3>
+                        </div>
+                        <p class="download-description">
+                            Em breve sera disponibilizado o conteúdo para essa secção fique atento.
+                        </p>
+                        <a href="https://docs.google.com/document/seu-link-docs" class="download-link" target="_blank">
+                            <span>📖</span>
+                            <span>Ler Docs brevemente</span>
+                        </a>
+                    </div>
+
+                    <!-- ==================== DOWNLOAD/LINK 5 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU QUINTO PROJETO/DOWNLOAD -->
+                    <div class="download-card">
+                        <div class="download-header">
+                            <span class="download-icon">🌐</span>
+                            <h3 class="download-title">Site do Projeto</h3>
+                        </div>
+                        <p class="download-description">
+                            Em breve sera disponibilizado o conteúdo para essa secção fique atento.
+                        </p>
+                        <a href="https://seusite.com" class="download-link" target="_blank">
+                            <span>🌍</span>
+                            <span>Visitar brevemente</span>
+                        </a>
+                    </div>
+
+                    <!-- ==================== DOWNLOAD/LINK 6 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU SEXTO PROJETO/DOWNLOAD -->
+                    <div class="download-card">
+                        <div class="download-header">
+                            <span class="download-icon">🎨</span>
+                            <h3 class="download-title">Assets e Recursos</h3>
+                        </div>
+                        <p class="download-description">
+                            Em breve sera disponibilizado o conteúdo para essa secção fique atento.
+                        </p>
+                        <a href="https://drive.google.com/folder/seus-assets" class="download-link" target="_blank">
+                            <span>🎨</span>
+                            <span>Baixar brevemente</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Animação suave para o logo
+        document.querySelector('.logo').addEventListener('click', function() {
+            this.style.transform = 'scale(1.2) rotate(360deg)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 300);
+        });
+
+        // Efeito de hover suave nos cards
+        document.querySelectorAll('.youtube-card, .download-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+    </script>
+
+    <!-- 
+    ========================================
+    INSTRUÇÕES PARA EDIÇÃO:
+    ========================================
+    
+    1. CANAIS PARCEIROS DO YOUTUBE:
+       - Procure por "CANAL PARCEIRO 1" e "CANAL PARCEIRO 2"
+       - Edite o nome do canal em "youtube-title"
+       - Edite a descrição em "youtube-description"
+       - Substitua o link em href="https://youtube.com/@seucanalparceiro1"
+    
+    2. DOWNLOADS E LINKS:
+       - Procure por "DOWNLOAD/LINK 1", "DOWNLOAD/LINK 2", etc.
+       - Edite o título em "download-title"
+       - Edite a descrição em "download-description"
+       - Substitua o link em href="seu-link-aqui"
+       - Mude o ícone em "download-icon" se necessário
+    
+    3. ADICIONAR MAIS ITENS:
+       - Para adicionar mais canais: copie todo o bloco "youtube-card"
+       - Para adicionar mais downloads: copie todo o bloco "download-card"
+    
+    4. REMOVER ITENS:
+       - Delete todo o bloco "youtube-card" ou "download-card" que não precisar
+    
+    5. ÍCONES DISPONÍVEIS:
+       📱 📺 💻 📄 🌐 🎨 🎥 📁 🔗 ⬇️ ▶️ 📖 🌍 🎬 📸 🎙️ 🔧 ⚙️
+    -->
+</body>
+</html>
+

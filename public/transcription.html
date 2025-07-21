@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transcrição de Áudio - IA Avançada</title>
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <style>
+        /* Transcription Page Specific Styles */
+        .audio-preview {
+            width: 100%;
+            margin: 15px 0;
+            border-radius: var(--radius-small);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .status-badge.processing {
+            background: rgba(255, 193, 7, 0.2);
+            color: #ffc107;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .status-badge.completed {
+            background: rgba(40, 167, 69, 0.2);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            animation: none;
+        }
+
+        .status-badge.error {
+            background: rgba(220, 53, 69, 0.2);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            animation: none;
+        }
+
+        .transcription-info {
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: var(--radius-medium);
+            margin: 25px 0;
+        }
+
+        .info-title {
+            font-size: 16px;
+            color: var(--text-accent);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: var(--radius-small);
+            border: 1px solid var(--border-color);
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .audio-formats {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-small);
+            border: 1px solid var(--border-color);
+        }
+
+        .formats-title {
+            font-size: 14px;
+            color: var(--text-accent);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .formats-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .format-tag {
+            padding: 4px 8px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: var(--radius-small);
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .transcription-tips {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-small);
+            border-left: 4px solid var(--text-accent);
+        }
+
+        .tips-title {
+            font-size: 14px;
+            color: var(--text-accent);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .tips-list {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .tips-list li {
+            margin-bottom: 5px;
+        }
+
+        .progress-indicator {
+            display: none;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progress-indicator.show {
+            display: block;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -50%;
+            width: 100%;
+            height: 2px;
+            background: var(--border-color);
+            z-index: 1;
+        }
+
+        .progress-step:last-child::after {
+            display: none;
+        }
+
+        .step-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-size: 12px;
+            font-weight: 600;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-circle.active {
+            background: var(--accent-primary);
+            color: white;
+        }
+
+        .step-circle.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-label {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .step-label.active {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botão Voltar -->
+    <a href="javascript:history.back()" class="back-button">Voltar</a>
+
+    <div class="page-container">
+        <div class="main-container">
+            <div class="page-header">
+                <h1>🎙️ Transcrição de Áudio IA</h1>
+                <p>Converta áudio em texto com tecnologia de inteligência artificial avançada</p>
+            </div>
+            
+            <div class="page-content">
+                <div class="transcription-info">
+                    <div class="info-title">🚀 Características da IA de Transcrição</div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Precisão</div>
+                            <div class="info-value">95%+</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Idiomas</div>
+                            <div class="info-value">50+</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Velocidade</div>
+                            <div class="info-value">Tempo Real</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Qualidade</div>
+                            <div class="info-value">Profissional</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">🎵</div>
+                    <div class="upload-text">Clique para selecionar um arquivo de áudio</div>
+                    <div class="upload-subtext">ou arraste e solte aqui</div>
+                    <input type="file" id="fileInput" accept="audio/*" style="display: none;" />
+                </div>
+
+                <div class="audio-formats">
+                    <div class="formats-title">📁 Formatos Suportados</div>
+                    <div class="formats-list">
+                        <span class="format-tag">MP3</span>
+                        <span class="format-tag">WAV</span>
+                        <span class="format-tag">M4A</span>
+                        <span class="format-tag">FLAC</span>
+                        <span class="format-tag">OGG</span>
+                        <span class="format-tag">AAC</span>
+                        <span class="format-tag">WMA</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-full" id="processBtn" onclick="processAudio()" disabled>
+                    🧠 Iniciar Transcrição com IA
+                </button>
+
+                <div class="progress-indicator" id="progressIndicator">
+                    <div class="progress-steps">
+                        <div class="progress-step">
+                            <div class="step-circle" id="step1">1</div>
+                            <div class="step-label">Upload</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle" id="step2">2</div>
+                            <div class="step-label">Processamento</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle" id="step3">3</div>
+                            <div class="step-label">IA Análise</div>
+                        </div>
+                        <div class="progress-step">
+                            <div class="step-circle" id="step4">4</div>
+                            <div class="step-label">Resultado</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">IA processando áudio...</div>
+                </div>
+                
+                <div class="result" id="result">
+                    <div id="statusBadge" class="status-badge processing">🔄 Processando...</div>
+                    <div class="result-title">📝 Transcrição Completa</div>
+                    <div class="result-content" id="resultText">Aguardando processamento da IA...</div>
+                </div>
+
+                <div class="transcription-tips">
+                    <div class="tips-title">💡 Dicas para Melhor Resultado</div>
+                    <ul class="tips-list">
+                        <li>Use áudios com boa qualidade e pouco ruído de fundo</li>
+                        <li>Fale de forma clara e em ritmo moderado</li>
+                        <li>Evite sobreposição de vozes</li>
+                        <li>Arquivos menores que 25MB são processados mais rapidamente</li>
+                        <li>A IA funciona melhor com áudios em português, inglês e espanhol</li>
+                    </ul>
+                </div>
+
+                <div class="error" id="error"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let transcriptionId = null;
+        let pollingInterval = null;
+
+        // Elementos do DOM
+        const uploadArea = document.querySelector('.upload-area');
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const resultText = document.getElementById('resultText');
+        const error = document.getElementById('error');
+        const statusBadge = document.getElementById('statusBadge');
+        const progressIndicator = document.getElementById('progressIndicator');
+
+        // Eventos de drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+
+        // Evento de seleção de arquivo
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            if (!file.type.startsWith('audio/')) {
+                showError('Por favor, selecione apenas arquivos de áudio.');
+                return;
+            }
+
+            // Verificar tamanho do arquivo (máximo 25MB)
+            if (file.size > 25 * 1024 * 1024) {
+                showError('Arquivo muito grande. Tamanho máximo permitido: 25MB.');
+                return;
+            }
+
+            selectedFile = file;
+            
+            // Remover player de áudio existente
+            const existingAudio = document.querySelector('.audio-preview');
+            if (existingAudio) {
+                existingAudio.remove();
+            }
+            
+            // Criar player de áudio para preview
+            const audioURL = URL.createObjectURL(file);
+            const audioPlayer = document.createElement('audio');
+            audioPlayer.src = audioURL;
+            audioPlayer.className = 'audio-preview';
+            audioPlayer.controls = true;
+            uploadArea.appendChild(audioPlayer);
+            
+            // Atualizar texto da área de upload
+            uploadArea.querySelector('.upload-text').textContent = file.name;
+            uploadArea.querySelector('.upload-subtext').textContent = `${formatFileSize(file.size)} - Áudio carregado`;
+            
+            processBtn.disabled = false;
+            hideError();
+            result.classList.remove('show');
+            progressIndicator.classList.remove('show');
+            
+            // Limpar polling anterior se existir
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+
+            updateProgressStep(1, 'completed');
+        }
+
+        async function processAudio() {
+            if (!selectedFile) {
+                showError('Por favor, selecione um arquivo de áudio primeiro.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('audio', selectedFile);
+
+            processBtn.disabled = true;
+            loading.classList.add('show');
+            result.classList.remove('show');
+            progressIndicator.classList.add('show');
+            hideError();
+
+            updateProgressStep(2, 'active');
+
+            try {
+                const response = await fetch('/api/transcription/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.transcription_id) {
+                    transcriptionId = data.transcription_id;
+                    
+                    updateProgressStep(2, 'completed');
+                    updateProgressStep(3, 'active');
+                    
+                    // Mostrar resultado com status inicial
+                    statusBadge.textContent = '🧠 IA Analisando...';
+                    statusBadge.className = 'status-badge processing';
+                    resultText.textContent = 'Nossa IA está processando seu áudio com tecnologia avançada de reconhecimento de fala. Isso pode levar alguns minutos dependendo do tamanho e qualidade do áudio.';
+                    result.classList.add('show');
+                    
+                    // Iniciar polling para verificar status
+                    startPolling(transcriptionId);
+                } else {
+                    throw new Error(data.error || 'Erro ao enviar áudio para transcrição.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro de conexão. Verifique se o servidor está rodando.');
+                updateProgressStep(2, 'error');
+            } finally {
+                loading.classList.remove('show');
+                processBtn.disabled = false;
+            }
+        }
+
+        function startPolling(id) {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+            }
+            
+            pollingInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`/api/transcription/status/${id}`);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        updateTranscriptionStatus(data);
+                        
+                        if (data.status === 'completed' || data.status === 'error') {
+                            clearInterval(pollingInterval);
+                            pollingInterval = null;
+                        }
+                    } else {
+                        showError(data.error || 'Erro ao verificar status da transcrição.');
+                        clearInterval(pollingInterval);
+                        pollingInterval = null;
+                    }
+                } catch (error) {
+                    showError('Erro de conexão ao verificar status da transcrição.');
+                    clearInterval(pollingInterval);
+                    pollingInterval = null;
+                }
+            }, 3000);
+        }
+
+        function updateTranscriptionStatus(data) {
+            if (data.status === 'completed') {
+                statusBadge.textContent = '✅ Transcrição Concluída';
+                statusBadge.className = 'status-badge completed';
+                resultText.textContent = data.text || 'Transcrição concluída, mas nenhum texto foi encontrado no áudio.';
+                
+                updateProgressStep(3, 'completed');
+                updateProgressStep(4, 'completed');
+                
+                // Adicionar botões de ação
+                addActionButtons(data.text);
+                
+            } else if (data.status === 'error') {
+                statusBadge.textContent = '❌ Erro na Transcrição';
+                statusBadge.className = 'status-badge error';
+                resultText.textContent = 'Ocorreu um erro durante a transcrição. Tente novamente com um áudio diferente.';
+                
+                updateProgressStep(3, 'error');
+                
+            } else {
+                statusBadge.textContent = '🧠 IA Processando...';
+                statusBadge.className = 'status-badge processing';
+                resultText.textContent = 'Nossa IA está analisando seu áudio com tecnologia de deep learning. Processamento em andamento...';
+            }
+        }
+
+        function updateProgressStep(stepNumber, status) {
+            const step = document.getElementById(`step${stepNumber}`);
+            const stepContainer = step.parentElement;
+            const label = stepContainer.querySelector('.step-label');
+            
+            // Reset classes
+            step.className = 'step-circle';
+            label.className = 'step-label';
+            
+            // Apply new status
+            if (status === 'active') {
+                step.classList.add('active');
+                label.classList.add('active');
+            } else if (status === 'completed') {
+                step.classList.add('completed');
+                step.textContent = '✓';
+            } else if (status === 'error') {
+                step.style.background = '#dc3545';
+                step.textContent = '✗';
+            }
+        }
+
+        function addActionButtons(text) {
+            if (!text) return;
+            
+            const actionsDiv = document.createElement('div');
+            actionsDiv.style.cssText = 'margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap;';
+            
+            const copyBtn = document.createElement('button');
+            copyBtn.className = 'btn btn-secondary';
+            copyBtn.textContent = '📋 Copiar Texto';
+            copyBtn.onclick = () => copyText(text);
+            
+            const downloadBtn = document.createElement('button');
+            downloadBtn.className = 'btn btn-secondary';
+            downloadBtn.textContent = '💾 Baixar TXT';
+            downloadBtn.onclick = () => downloadText(text);
+            
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'btn btn-secondary';
+            clearBtn.textContent = '🗑️ Nova Transcrição';
+            clearBtn.onclick = () => clearResults();
+            
+            actionsDiv.appendChild(copyBtn);
+            actionsDiv.appendChild(downloadBtn);
+            actionsDiv.appendChild(clearBtn);
+            
+            result.appendChild(actionsDiv);
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showSuccess('Texto copiado para a área de transferência!');
+            }).catch(() => {
+                showError('Erro ao copiar texto.');
+            });
+        }
+
+        function downloadText(text) {
+            const blob = new Blob([text], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `transcricao_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showSuccess('Arquivo de transcrição baixado!');
+        }
+
+        function clearResults() {
+            selectedFile = null;
+            transcriptionId = null;
+            fileInput.value = '';
+            processBtn.disabled = true;
+            result.classList.remove('show');
+            progressIndicator.classList.remove('show');
+            
+            // Remover preview do áudio
+            const existingAudio = document.querySelector('.audio-preview');
+            if (existingAudio) {
+                existingAudio.remove();
+            }
+            
+            // Restaurar texto original da área de upload
+            uploadArea.querySelector('.upload-text').textContent = 'Clique para selecionar um arquivo de áudio';
+            uploadArea.querySelector('.upload-subtext').textContent = 'ou arraste e solte aqui';
+            
+            // Reset progress steps
+            for (let i = 1; i <= 4; i++) {
+                const step = document.getElementById(`step${i}`);
+                step.className = 'step-circle';
+                step.textContent = i;
+            }
+            
+            hideError();
+            
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function showError(message) {
+            error.textContent = message;
+            error.classList.add('show');
+            setTimeout(() => error.classList.remove('show'), 5000);
+        }
+
+        function hideError() {
+            error.classList.remove('show');
+        }
+
+        function showSuccess(message) {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed; top: 20px; right: 20px; z-index: 1001;
+                background: rgba(40, 167, 69, 0.9); color: white;
+                padding: 15px 20px; border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                backdrop-filter: blur(10px);
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            setTimeout(() => successDiv.remove(), 3000);
+        }
+    </script>
+</body>
+</html>

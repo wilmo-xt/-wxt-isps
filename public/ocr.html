@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR - Extração de Texto Avançada</title>
+    <link rel="stylesheet" href="css/shared-styles.css">
+    <style>
+        /* OCR Page Specific Styles */
+        .preview-image {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: var(--radius-small);
+            margin: 15px 0;
+            box-shadow: var(--shadow-small);
+            object-fit: contain;
+        }
+
+        .processing-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            border-radius: var(--radius-small);
+            color: var(--text-accent);
+        }
+
+        .confidence-score {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: var(--radius-small);
+            border: 1px solid var(--border-color);
+        }
+
+        .confidence-label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+        }
+
+        .confidence-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: var(--accent-primary);
+            transition: width 1s ease;
+            border-radius: 4px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-icon {
+            padding: 10px 15px;
+            min-width: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Botão Voltar -->
+    <a href="javascript:history.back()" class="back-button">Voltar</a>
+
+    <div class="page-container">
+        <div class="main-container">
+            <div class="page-header">
+                <h1>📸 OCR Extrator Avançado</h1>
+                <p>Extraia texto de qualquer imagem com precisão profissional</p>
+            </div>
+            
+            <div class="page-content">
+                <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                    <div class="upload-icon">📁</div>
+                    <div class="upload-text">Clique para selecionar uma imagem</div>
+                    <div class="upload-subtext">ou arraste e solte aqui (PNG, JPG, JPEG, WebP)</div>
+                    <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+                </div>
+                
+                <button class="btn btn-full" id="processBtn" onclick="processImage()" disabled>
+                    ✨ Extrair Texto da Imagem
+                </button>
+                
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Analisando imagem e extraindo texto...</div>
+                </div>
+                
+                <div class="result" id="result">
+                    <div class="result-title">📝 Texto Extraído</div>
+                    <div class="result-content" id="resultText"></div>
+                    <div class="confidence-score" id="confidenceScore" style="display: none;">
+                        <div class="confidence-label">Nível de Confiança da Extração</div>
+                        <div class="confidence-bar">
+                            <div class="confidence-fill" id="confidenceFill"></div>
+                        </div>
+                        <div style="text-align: center; margin-top: 5px; font-size: 12px;" id="confidenceText"></div>
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary btn-icon" onclick="copyText()" title="Copiar texto">
+                            📋
+                        </button>
+                        <button class="btn btn-secondary btn-icon" onclick="downloadText()" title="Baixar como TXT">
+                            💾
+                        </button>
+                        <button class="btn btn-secondary btn-icon" onclick="clearResults()" title="Limpar resultados">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+
+                <div class="error" id="error"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let extractedText = '';
+
+        // Elementos do DOM
+        const uploadArea = document.querySelector('.upload-area');
+        const fileInput = document.getElementById('fileInput');
+        const processBtn = document.getElementById('processBtn');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const resultText = document.getElementById('resultText');
+        const error = document.getElementById('error');
+        const confidenceScore = document.getElementById('confidenceScore');
+        const confidenceFill = document.getElementById('confidenceFill');
+        const confidenceText = document.getElementById('confidenceText');
+
+        // Eventos de drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+
+        // Evento de seleção de arquivo
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('Por favor, selecione apenas arquivos de imagem (PNG, JPG, JPEG, WebP).');
+                return;
+            }
+
+            // Verificar tamanho do arquivo (máximo 10MB)
+            if (file.size > 10 * 1024 * 1024) {
+                showError('Arquivo muito grande. O tamanho máximo permitido é 10MB.');
+                return;
+            }
+
+            selectedFile = file;
+            
+            // Mostrar preview da imagem
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const existingPreview = document.querySelector('.preview-image');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+                
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.className = 'preview-image';
+                img.alt = 'Preview da imagem selecionada';
+                uploadArea.appendChild(img);
+                
+                // Atualizar texto da área de upload
+                uploadArea.querySelector('.upload-text').textContent = file.name;
+                uploadArea.querySelector('.upload-subtext').textContent = `${formatFileSize(file.size)} - Imagem carregada`;
+            };
+            reader.readAsDataURL(file);
+            
+            processBtn.disabled = false;
+            hideError();
+            result.classList.remove('show');
+        }
+
+        async function processImage() {
+            if (!selectedFile) {
+                showError('Por favor, selecione uma imagem primeiro.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+
+            processBtn.disabled = true;
+            loading.classList.add('show');
+            result.classList.remove('show');
+            hideError();
+
+            try {
+                const response = await fetch('/api/ocr', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    extractedText = data.text || 'Nenhum texto foi encontrado na imagem.';
+                    resultText.textContent = extractedText;
+                    
+                    // Mostrar nível de confiança se disponível
+                    if (data.confidence) {
+                        const confidence = Math.round(data.confidence);
+                        confidenceFill.style.width = confidence + '%';
+                        confidenceText.textContent = confidence + '%';
+                        confidenceScore.style.display = 'block';
+                    }
+                    
+                    result.classList.add('show');
+                } else {
+                    showError(data.error || 'Erro ao processar a imagem. Tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                showError('Erro de conexão. Verifique se o servidor está rodando e tente novamente.');
+            } finally {
+                loading.classList.remove('show');
+                processBtn.disabled = false;
+            }
+        }
+
+        function copyText() {
+            if (!extractedText) return;
+            
+            navigator.clipboard.writeText(extractedText).then(() => {
+                showSuccess('Texto copiado para a área de transferência!');
+            }).catch(() => {
+                // Fallback para navegadores mais antigos
+                const textArea = document.createElement('textarea');
+                textArea.value = extractedText;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showSuccess('Texto copiado para a área de transferência!');
+            });
+        }
+
+        function downloadText() {
+            if (!extractedText) return;
+            
+            const blob = new Blob([extractedText], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `texto_extraido_${new Date().getTime()}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showSuccess('Arquivo de texto baixado com sucesso!');
+        }
+
+        function clearResults() {
+            selectedFile = null;
+            extractedText = '';
+            fileInput.value = '';
+            processBtn.disabled = true;
+            result.classList.remove('show');
+            confidenceScore.style.display = 'none';
+            
+            // Remover preview da imagem
+            const existingPreview = document.querySelector('.preview-image');
+            if (existingPreview) {
+                existingPreview.remove();
+            }
+            
+            // Restaurar texto original da área de upload
+            uploadArea.querySelector('.upload-text').textContent = 'Clique para selecionar uma imagem';
+            uploadArea.querySelector('.upload-subtext').textContent = 'ou arraste e solte aqui (PNG, JPG, JPEG, WebP)';
+            
+            hideError();
+        }
+
+        function showError(message) {
+            error.textContent = message;
+            error.classList.add('show');
+            setTimeout(() => {
+                error.classList.remove('show');
+            }, 5000);
+        }
+
+        function hideError() {
+            error.classList.remove('show');
+        }
+
+        function showSuccess(message) {
+            // Criar elemento de sucesso temporário
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success';
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(86, 171, 47, 0.9);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                z-index: 1001;
+                backdrop-filter: blur(10px);
+            `;
+            successDiv.textContent = message;
+            document.body.appendChild(successDiv);
+            
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Atalhos de teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                switch(e.key) {
+                    case 'v':
+                        e.preventDefault();
+                        // Implementar cola de imagem da área de transferência
+                        break;
+                    case 'c':
+                        if (extractedText) {
+                            e.preventDefault();
+                            copyText();
+                        }
+                        break;
+                    case 's':
+                        if (extractedText) {
+                            e.preventDefault();
+                            downloadText();
+                        }
+                        break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

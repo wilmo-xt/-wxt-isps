@@ -1,0 +1,123 @@
+/* Initial Screen CSS - Mobile First Design */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    overflow-x: hidden;
+}
+
+.logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 30px;
+    border: 3px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+video {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    margin: 20px 0;
+}
+
+.enter-button {
+    margin-top: 30px;
+    padding: 15px 40px;
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 50px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.enter-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(45deg, #764ba2, #667eea);
+}
+
+.enter-button:active {
+    transform: translateY(-1px);
+}
+
+.copyright {
+    position: fixed;
+    bottom: 20px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    text-align: center;
+    width: 100%;
+}
+
+/* Desktop Adaptations */
+@media (min-width: 768px) {
+    .logo {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 40px;
+    }
+    
+    video {
+        max-width: 500px;
+        margin: 30px 0;
+    }
+    
+    .enter-button {
+        font-size: 20px;
+        padding: 18px 50px;
+        margin-top: 40px;
+    }
+    
+    .copyright {
+        bottom: 30px;
+        font-size: 12px;
+    }
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.logo, video, .enter-button {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+video {
+    animation-delay: 0.2s;
+}
+
+.enter-button {
+    animation-delay: 0.4s;
+}
