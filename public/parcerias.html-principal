@@ -7,9 +7,6 @@
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5104140477096309"
      crossorigin="anonymous"></script>
-    
-    <!-- CSS específico do banner Adsterra -->
-    <link rel="stylesheet" href="/css/adsterra-banner.css">
         
     <style>
         * {
@@ -231,8 +228,6 @@
             border-radius: 8px;
             font-weight: 600;
             transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
         }
 
         .youtube-link:hover {
@@ -315,104 +310,11 @@
             font-weight: 600;
             transition: all 0.3s ease;
             font-size: 14px;
-            cursor: pointer;
-            border: none;
         }
 
         .download-link:hover {
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-        }
-
-        /* Banner Nativo Adsterra - Discreto */
-        .adsterra-native-container {
-            margin-top: 60px;
-            padding: 30px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            opacity: 0.7;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .adsterra-native-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
-        }
-
-        .adsterra-native-container:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        .adsterra-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        .adsterra-label {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 20px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 300;
-            position: relative;
-        }
-
-        .adsterra-label::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 30px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .adsterra-ad-wrapper {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 25px;
-            transition: all 0.4s ease;
-            position: relative;
-            backdrop-filter: blur(5px);
-        }
-
-        .adsterra-ad-wrapper:hover {
-            background: rgba(255, 255, 255, 0.04);
-            border-color: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-        }
-
-        .adsterra-ad-wrapper::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            transition: left 0.8s ease;
-            border-radius: 16px;
-        }
-
-        .adsterra-ad-wrapper:hover::before {
-            left: 100%;
-        }
-
-        .adsterra-ad-content {
-            position: relative;
-            z-index: 2;
         }
 
         /* Responsividade */
@@ -449,25 +351,6 @@
             .downloads-grid {
                 grid-template-columns: 1fr;
             }
-
-            .adsterra-native-container {
-                margin-top: 40px;
-                padding: 20px 0;
-            }
-            
-            .adsterra-wrapper {
-                padding: 0 15px;
-            }
-            
-            .adsterra-ad-wrapper {
-                padding: 20px;
-                border-radius: 12px;
-            }
-            
-            .adsterra-label {
-                font-size: 10px;
-                margin-bottom: 15px;
-            }
         }
 
         @media (max-width: 480px) {
@@ -478,21 +361,6 @@
 
             .youtube-card, .download-card {
                 padding: 20px;
-            }
-
-            .adsterra-native-container {
-                margin-top: 30px;
-                padding: 15px 0;
-            }
-            
-            .adsterra-ad-wrapper {
-                padding: 15px;
-                border-radius: 10px;
-            }
-            
-            .adsterra-label {
-                font-size: 9px;
-                letter-spacing: 1px;
             }
         }
 
@@ -515,21 +383,6 @@
         @keyframes slideInCard {
             to {
                 opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .adsterra-native-container {
-            animation: fadeInBanner 1.2s ease 2s both;
-        }
-
-        @keyframes fadeInBanner {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 0.7;
                 transform: translateY(0);
             }
         }
@@ -565,6 +418,7 @@
                 
                 <div class="youtube-grid">
                     <!-- ==================== CANAL PARCEIRO 1 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU PRIMEIRO CANAL PARCEIRO -->
                     <div class="youtube-card">
                         <div class="youtube-header">
                             <span class="youtube-icon">📺</span>
@@ -573,13 +427,14 @@
                         <p class="youtube-description">
                             Videos interativos para assistir e passar tempo e si divertir am qualquer hora não perca tempo clique embaixo e divirtam-se.
                         </p>
-                        <button onclick="redirectWithAdsterra('https://youtube.com/@spiderpool2025?si=kBMUpU1gcWoxAdKa')" class="youtube-link">
+                        <a href="https://youtube.com/@spiderpool2025?si=kBMUpU1gcWoxAdKa" class="youtube-link" target="_blank">
                             <span>🎬</span>
                             <span>Visitar Canal</span>
-                        </button>
+                        </a>
                     </div>
 
                     <!-- ==================== CANAL PARCEIRO 2 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU SEGUNDO CANAL PARCEIRO -->
                     <div class="youtube-card">
                         <div class="youtube-header">
                             <span class="youtube-icon">📺</span>
@@ -588,10 +443,10 @@
                         <p class="youtube-description">
                             Esse canal pertence ao criador desse site é um canal focado em ensinar programação JavaScript criação de bots e muito mais confira clicando em visitar.
                         </p>
-                        <button onclick="redirectWithAdsterra('https://youtube.com/@wilmoxt?si=uAj34mFllUlR__UY')" class="youtube-link">
+                        <a href="https://youtube.com/@wilmoxt?si=uAj34mFllUlR__UY" class="youtube-link" target="_blank">
                             <span>🎬</span>
                             <span>Visitar Canal</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -607,6 +462,7 @@
                 
                 <div class="downloads-grid">
                     <!-- ==================== DOWNLOAD/LINK 1 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU PRIMEIRO PROJETO/DOWNLOAD -->
                     <div class="download-card">
                         <div class="download-header">
                             <span class="download-icon">📱</span>
@@ -615,13 +471,14 @@
                         <p class="download-description">
                             Em breve sera disponibilizado o conteúdo para essa secção fique atento.
                         </p>
-                        <button onclick="redirectWithAdsterra('vazio/link/aqui')" class="download-link">
+                        <a href="vazio/link/aqui" class="download-link" target="_blank">
                             <span>⬇️</span>
                             <span>Baixar em breve</span>
-                        </button>
+                        </a>
                     </div>
 
                     <!-- ==================== DOWNLOAD/LINK 2 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU SEGUNDO PROJETO/DOWNLOAD -->
                     <div class="download-card">
                         <div class="download-header">
                             <span class="download-icon">🎥</span>
@@ -630,13 +487,14 @@
                         <p class="download-description">
                             Em breve sera disponibilizado o conteúdo para essa secção fique atento.
                         </p>
-                        <button onclick="redirectWithAdsterra('https://youtube.com/watch?v=seu-video-tutorial')" class="download-link">
+                        <a href="https://youtube.com/watch?v=seu-video-tutorial" class="download-link" target="_blank">
                             <span>▶️</span>
                             <span>Assistir brevemente</span>
-                        </button>
+                        </a>
                     </div>
 
                     <!-- ==================== DOWNLOAD/LINK 3 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU TERCEIRO PROJETO/DOWNLOAD -->
                     <div class="download-card">
                         <div class="download-header">
                             <span class="download-icon">💻</span>
@@ -645,13 +503,14 @@
                         <p class="download-description">
                           Em breve sera disponibilizado o conteúdo para essa secção fique atento..
                         </p>
-                        <button onclick="redirectWithAdsterra('https://github.com/usuario/ocr-app')" class="download-link">
+                        <a href="https://github.com/usuario/ocr-app" class="download-link" target="_blank">
                             <span>🔗</span>
                             <span>GitHub Brevemente</span>
-                        </button>
+                        </a>
                     </div>
 
                     <!-- ==================== DOWNLOAD/LINK 4 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU QUARTO PROJETO/DOWNLOAD -->
                     <div class="download-card">
                         <div class="download-header">
                             <span class="download-icon">📄</span>
@@ -660,13 +519,14 @@
                         <p class="download-description">
                             Em breve sera disponibilizado o conteúdo para essa secção fique atento.
                         </p>
-                        <button onclick="redirectWithAdsterra('https://docs.google.com/document/seu-link-docs')" class="download-link">
+                        <a href="https://docs.google.com/document/seu-link-docs" class="download-link" target="_blank">
                             <span>📖</span>
                             <span>Ler Docs brevemente</span>
-                        </button>
+                        </a>
                     </div>
 
                     <!-- ==================== DOWNLOAD/LINK 5 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU QUINTO PROJETO/DOWNLOAD -->
                     <div class="download-card">
                         <div class="download-header">
                             <span class="download-icon">🌐</span>
@@ -675,13 +535,14 @@
                         <p class="download-description">
                             Em breve sera disponibilizado o conteúdo para essa secção fique atento.
                         </p>
-                        <button onclick="redirectWithAdsterra('https://seusite.com')" class="download-link">
+                        <a href="https://seusite.com" class="download-link" target="_blank">
                             <span>🌍</span>
                             <span>Visitar brevemente</span>
-                        </button>
+                        </a>
                     </div>
 
                     <!-- ==================== DOWNLOAD/LINK 6 ==================== -->
+                    <!-- EDITE AS INFORMAÇÕES ABAIXO PARA SEU SEXTO PROJETO/DOWNLOAD -->
                     <div class="download-card">
                         <div class="download-header">
                             <span class="download-icon">🎨</span>
@@ -690,58 +551,17 @@
                         <p class="download-description">
                             Em breve sera disponibilizado o conteúdo para essa secção fique atento.
                         </p>
-                        <button onclick="redirectWithAdsterra('https://drive.google.com/folder/seus-assets')" class="download-link">
+                        <a href="https://drive.google.com/folder/seus-assets" class="download-link" target="_blank">
                             <span>🎨</span>
                             <span>Baixar brevemente</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========================================== -->
-            <!-- BANNER NATIVO ADSTERRA - TOTALMENTE DISCRETO -->
-            <!-- ========================================== -->
-            <div class="adsterra-native-container">
-                <div class="adsterra-wrapper">
-                    <div class="adsterra-label">Conteúdo Patrocinado</div>
-                    <div class="adsterra-ad-wrapper">
-                        <div class="adsterra-ad-content">
-                            <!-- BANNER NATIVO ADSTERRA - CÓDIGO REAL -->
-                            <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
-                            <div id="container-34b49a846483ba0a3d10f74ef2ee93d5"></div>
-                        </div>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript para funcionalidade do Adsterra -->
     <script>
-        // ========================================
-        // CONFIGURAÇÃO DO ADSTERRA - LINKS DIRETOS
-        // ========================================
-        
-        // Função para redirecionamento com Adsterra - CÓDIGO REAL INTEGRADO
-        function redirectWithAdsterra(targetUrl) {
-            // Link direto real do Adsterra fornecido pelo usuário
-            const adsterraDirectLink = 'https://www.profitableratecpm.com/a4s85n57u?key=7bc1f256691c7d378a321eedd659a22c';
-            
-            // Codifica a URL de destino para passar como parâmetro
-            const encodedUrl = encodeURIComponent(targetUrl);
-            
-            // Abre o link do Adsterra em nova aba
-            // O Adsterra irá redirecionar para a URL de destino após mostrar o anúncio
-            window.open(adsterraDirectLink + '&url=' + encodedUrl, '_blank');
-            
-            // Log para tracking
-            console.log('Redirecionamento Adsterra:', targetUrl);
-        }
-
-        // ========================================
-        // ANIMAÇÕES E INTERAÇÕES DA PÁGINA
-        // ========================================
-        
         // Animação suave para o logo
         document.querySelector('.logo').addEventListener('click', function() {
             this.style.transform = 'scale(1.2) rotate(360deg)';
@@ -760,102 +580,35 @@
                 this.style.transform = 'translateY(0) scale(1)';
             });
         });
-
-        // ========================================
-        // CARREGAMENTO DO BANNER NATIVO
-        // ========================================
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            // Delay para carregar o banner após o conteúdo principal
-            setTimeout(function() {
-                const bannerContainer = document.getElementById('container-34b49a846483ba0a3d10f74ef2ee93d5');
-                if (bannerContainer) {
-                    console.log('Banner nativo Adsterra carregado com sucesso');
-                    
-                    // Verifica se o banner carregou corretamente após 5 segundos
-                    setTimeout(function() {
-                        if (bannerContainer.children.length === 0) {
-                            console.log('Banner nativo não carregou - possível bloqueio por adblocker');
-                        } else {
-                            console.log('Banner nativo funcionando corretamente');
-                        }
-                    }, 5000);
-                }
-            }, 2000);
-        });
-
-        // ========================================
-        // ANALYTICS E TRACKING
-        // ========================================
-        
-        // Função para rastrear cliques nos links
-        function trackClick(linkType, destination) {
-            console.log(`Click tracked: ${linkType} -> ${destination}`);
-            
-            // Aqui você pode adicionar código de analytics como Google Analytics
-            // gtag('event', 'click', {
-            //     'event_category': 'adsterra_redirect',
-            //     'event_label': linkType + '_' + destination
-            // });
-        }
-
-        // Adiciona tracking aos botões
-        document.querySelectorAll('.youtube-link, .download-link').forEach(button => {
-            button.addEventListener('click', function() {
-                const linkType = this.closest('.youtube-card') ? 'youtube' : 'download';
-                const destination = this.onclick.toString().match(/'([^']+)'/)[1];
-                trackClick(linkType, destination);
-            });
-        });
-
-        // ========================================
-        // VERIFICAÇÃO DE FUNCIONAMENTO
-        // ========================================
-        
-        // Verifica se todos os componentes do Adsterra estão funcionando
-        function checkAdsterraStatus() {
-            console.log('=== STATUS ADSTERRA ===');
-            console.log('Link direto configurado:', 'https://www.profitableratecpm.com/a4s85n57u?key=7bc1f256691c7d378a321eedd659a22c');
-            console.log('Banner nativo ID:', 'container-34b49a846483ba0a3d10f74ef2ee93d5');
-            console.log('Script banner carregado:', !!document.querySelector('script[src*="pl27238573.profitableratecpm.com"]'));
-            console.log('Container banner existe:', !!document.getElementById('container-34b49a846483ba0a3d10f74ef2ee93d5'));
-        }
-
-        // Executa verificação após carregamento completo
-        window.addEventListener('load', function() {
-            setTimeout(checkAdsterraStatus, 3000);
-        });
     </script>
 
     <!-- 
     ========================================
-    ✅ ADSTERRA TOTALMENTE CONFIGURADO E FUNCIONAL
+    INSTRUÇÕES PARA EDIÇÃO:
     ========================================
     
-    🔗 LINK DIRETO INTEGRADO:
-    - URL: https://www.profitableratecpm.com/a4s85n57u?key=7bc1f256691c7d378a321eedd659a22c
-    - Todos os links do YouTube e downloads passam pelo Adsterra
-    - Redirecionamento automático após exibição do anúncio
+    1. CANAIS PARCEIROS DO YOUTUBE:
+       - Procure por "CANAL PARCEIRO 1" e "CANAL PARCEIRO 2"
+       - Edite o nome do canal em "youtube-title"
+       - Edite a descrição em "youtube-description"
+       - Substitua o link em href="https://youtube.com/@seucanalparceiro1"
     
-    🎯 BANNER NATIVO INTEGRADO:
-    - Script: //pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js
-    - Container: container-34b49a846483ba0a3d10f74ef2ee93d5
-    - Posicionamento discreto no final da página
-    - Totalmente responsivo e integrado ao design
+    2. DOWNLOADS E LINKS:
+       - Procure por "DOWNLOAD/LINK 1", "DOWNLOAD/LINK 2", etc.
+       - Edite o título em "download-title"
+       - Edite a descrição em "download-description"
+       - Substitua o link em href="seu-link-aqui"
+       - Mude o ícone em "download-icon" se necessário
     
-    ✨ CARACTERÍSTICAS:
-    - Banner totalmente discreto e não-intrusivo
-    - Carregamento otimizado e não-bloqueante
-    - Tracking e analytics implementados
-    - Verificação automática de funcionamento
-    - Fallback para problemas de carregamento
-    - Responsivo para todos os dispositivos
+    3. ADICIONAR MAIS ITENS:
+       - Para adicionar mais canais: copie todo o bloco "youtube-card"
+       - Para adicionar mais downloads: copie todo o bloco "download-card"
     
-    📊 MONITORAMENTO:
-    - Console logs para debug e verificação
-    - Tracking de cliques implementado
-    - Verificação automática de status do Adsterra
-    - Detecção de bloqueio por adblockers
+    4. REMOVER ITENS:
+       - Delete todo o bloco "youtube-card" ou "download-card" que não precisar
+    
+    5. ÍCONES DISPONÍVEIS:
+       📱 📺 💻 📄 🌐 🎨 🎥 📁 🔗 ⬇️ ▶️ 📖 🌍 🎬 📸 🎙️ 🔧 ⚙️
     -->
 </body>
 </html>

@@ -1,0 +1,153 @@
+/* CSS para Anúncios - Monetag e Adsterra */
+
+/* Container principal dos anúncios */
+.ads-section {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    min-height: 60px;
+    max-height: 80px;
+    overflow: hidden;
+}
+
+/* Container individual para cada anúncio */
+.ad-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 5px;
+    transition: all 0.3s ease;
+    max-width: 300px;
+    max-height: 60px;
+    overflow: hidden;
+}
+
+.ad-container:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+/* Tamanho pequeno para os anúncios */
+.ad-small {
+    font-size: 12px;
+    line-height: 1.2;
+}
+
+/* Estilização específica para elementos de anúncio */
+.ad-container iframe,
+.ad-container div,
+.ad-container script + div {
+    max-width: 280px !important;
+    max-height: 50px !important;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+    .ads-section {
+        flex-direction: column;
+        gap: 8px;
+        padding: 6px;
+        min-height: 50px;
+        max-height: 100px;
+    }
+    
+    .ad-container {
+        max-width: 250px;
+        max-height: 45px;
+        padding: 3px;
+    }
+    
+    .ad-container iframe,
+    .ad-container div,
+    .ad-container script + div {
+        max-width: 240px !important;
+        max-height: 40px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .ads-section {
+        padding: 4px;
+        min-height: 45px;
+        max-height: 90px;
+    }
+    
+    .ad-container {
+        max-width: 200px;
+        max-height: 40px;
+        padding: 2px;
+    }
+    
+    .ad-container iframe,
+    .ad-container div,
+    .ad-container script + div {
+        max-width: 190px !important;
+        max-height: 35px !important;
+    }
+    
+    .ad-small {
+        font-size: 10px;
+    }
+}
+
+/* Animação suave de entrada */
+.ads-section {
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Ajuste para não sobrepor o conteúdo principal */
+body {
+    padding-bottom: 80px;
+}
+
+@media (max-width: 768px) {
+    body {
+        padding-bottom: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-bottom: 90px;
+    }
+}
+
+/* Estilização adicional para garantir que os anúncios sejam discretos */
+.ad-container * {
+    font-size: inherit !important;
+    line-height: inherit !important;
+}
+
+/* Ocultar elementos desnecessários dos anúncios */
+.ad-container .ad-label,
+.ad-container .sponsored,
+.ad-container .advertisement {
+    display: none !important;
+}
+

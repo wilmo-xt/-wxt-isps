@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Baixe vídeos de forma rápida e segura com nossa ferramenta profissional">
+  <title>Download de Vídeos - Ferramenta Profissional</title>
+  <link rel="stylesheet" href="css/dw.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+  <!-- Botão de voltar -->
+  <a href="javascript:history.back()" class="back-button" title="Voltar">
+    Voltar
+  </a>
+
+  <div class="container">
+    <h1>Download de Vídeos</h1>
+    
+    <div class="main-card">
+      <form id="form" class="form-container">
+        <div class="input-group">
+          <label for="url">URL do Vídeo</label>
+          <input 
+            type="url" 
+            id="url" 
+            placeholder="Cole o link da mídia aqui (YouTube, TikTok, Instagram...)" 
+            required 
+            autocomplete="url"
+            aria-describedby="url-help"
+          >
+          <small id="url-help" style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.5rem; display: block;">
+            Suportamos links do YouTube, TikTok, Instagram e outras plataformas
+          </small>
+        </div>
+        
+        <button type="submit" class="download-button" id="downloadBtn">
+          <span id="buttonText">Processar Vídeo</span>
+        </button>
+      </form>
+      
+      <div id="result" style="display: none;"></div>
+      
+      <!-- Área de prévia do vídeo -->
+      <div id="videoPreview" class="video-preview" style="display: none;">
+        <div class="video-info">
+          <div class="video-title" id="videoTitle"></div>
+          <div class="video-duration" id="videoDuration"></div>
+        </div>
+        <video id="previewVideo" controls style="display: none;">
+          Seu navegador não suporta o elemento de vídeo.
+        </video>
+        <img id="previewThumbnail" style="display: none; max-width: 100%; border-radius: 12px; box-shadow: 0 8px 32px var(--shadow-color);" alt="Thumbnail do vídeo">
+        <div>
+          <button type="button" class="video-download-btn" id="finalDownloadBtn" style="display: none;">
+            <span>📥 Baixar Vídeo</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Container para anúncio Adsterra com fallback -->
+    <div id="adContainer" class="ad-container" style="display: none;">
+      <div class="ad-label">Publicidade</div>
+      <div id="adContent">
+        <!-- Anúncio nativo Adsterra -->
+        <div id="container-34b49a846483ba0a3d10f74ef2ee93d5"></div>
+        
+        <!-- Fallback: banner customizado com link direto -->
+        <div id="fallback-ad" style="display: none;">
+          <a href="https://www.profitableratecpm.com/a4s85n57u?key=7bc1f256691c7d378a321eedd659a22c" 
+             target="_blank" 
+             class="ad-banner"
+             onclick="console.log('Anúncio fallback clicado');">
+            <div class="ad-title">🎯 Oferta Especial</div>
+            <div class="ad-description">Descubra oportunidades incríveis aqui!</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Estado da aplicação
+    let currentVideoData = null;
+    
+    // Elementos do DOM
+    const form = document.getElementById('form');
+    const urlInput = document.getElementById('url');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const buttonText = document.getElementById('buttonText');
+    const resultDiv = document.getElementById('result');
+    const videoPreview = document.getElementById('videoPreview');
+    const videoTitle = document.getElementById('videoTitle');
+    const videoDuration = document.getElementById('videoDuration');
+    const previewVideo = document.getElementById('previewVideo');
+    const previewThumbnail = document.getElementById('previewThumbnail');
+    const finalDownloadBtn = document.getElementById('finalDownloadBtn');
+
+    // Função para mostrar loading
+    function showLoading() {
+      downloadBtn.disabled = true;
+      buttonText.innerHTML = '<span class="loading"></span>Processando...';
+    }
+
+    // Função para esconder loading
+    function hideLoading() {
+      downloadBtn.disabled = false;
+      buttonText.textContent = 'Processar Vídeo';
+    }
+
+    // Função para mostrar resultado
+    function showResult(message, isSuccess = true) {
+      resultDiv.style.display = 'flex';
+      resultDiv.className = isSuccess ? 'result-success' : 'result-error';
+      resultDiv.innerHTML = message;
+      
+      // Scroll suave para o resultado
+      resultDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Função para esconder resultado
+    function hideResult() {
+      resultDiv.style.display = 'none';
+      videoPreview.style.display = 'none';
+    }
+
+    // Função para mostrar prévia do vídeo
+    function showVideoPreview(videoData) {
+      currentVideoData = videoData;
+      
+      // Atualizar informações do vídeo
+      videoTitle.textContent = videoData.title || 'Vídeo processado';
+      videoDuration.textContent = videoData.duration ? `Duração: ${videoData.duration}` : '';
+      
+      // Mostrar thumbnail se disponível
+      if (videoData.thumbnail) {
+        previewThumbnail.src = videoData.thumbnail;
+        previewThumbnail.style.display = 'block';
+        previewVideo.style.display = 'none';
+      } else if (videoData.preview) {
+        previewVideo.src = videoData.preview;
+        previewVideo.style.display = 'block';
+        previewThumbnail.style.display = 'none';
+      }
+      
+      // Mostrar botão de download
+      finalDownloadBtn.style.display = 'inline-block';
+      finalDownloadBtn.onclick = () => {
+        if (videoData.download) {
+          // Criar link temporário para download
+          const link = document.createElement('a');
+          link.href = videoData.download;
+          link.download = videoData.filename || 'video';
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          
+          showResult('✅ Download iniciado! Verifique sua pasta de downloads.', true);
+        }
+      };
+      
+      // Mostrar container de prévia
+      videoPreview.style.display = 'block';
+      videoPreview.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Event listener do formulário
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const url = urlInput.value.trim();
+      if (!url) {
+        showResult('❌ Por favor, insira uma URL válida.', false);
+        return;
+      }
+
+      hideResult();
+      showLoading();
+
+      try {
+        const response = await fetch('/api/download', {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({ url })
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          if (result.preview || result.thumbnail) {
+            // Mostrar prévia se disponível
+            showVideoPreview(result);
+            showResult('✅ Vídeo processado com sucesso! Visualize abaixo:', true);
+          } else if (result.download) {
+            // Download direto se não houver prévia
+            showResult(`✅ <a href="${result.download}" target="_blank" style="color: var(--success-color); text-decoration: underline;">Clique aqui para baixar o vídeo</a>`, true);
+          } else {
+            showResult('✅ Vídeo processado, mas não foi possível gerar prévia.', true);
+          }
+        } else {
+          showResult(`❌ ${result.error || 'Erro ao processar o vídeo. Verifique se a URL é válida e tente novamente.'}`, false);
+        }
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+        showResult('❌ Erro de conexão. Verifique sua internet e tente novamente.', false);
+      } finally {
+        hideLoading();
+      }
+    });
+
+    // Validação em tempo real da URL
+    urlInput.addEventListener('input', (e) => {
+      const url = e.target.value.trim();
+      const isValid = url === '' || /^https?:\/\/.+/.test(url);
+      
+      if (!isValid && url !== '') {
+        urlInput.style.borderColor = 'var(--error-color)';
+      } else {
+        urlInput.style.borderColor = 'var(--border-color)';
+      }
+    });
+
+    // Limpar resultado quando o usuário começar a digitar uma nova URL
+    urlInput.addEventListener('focus', () => {
+      if (resultDiv.style.display !== 'none') {
+        hideResult();
+      }
+    });
+
+    // Adicionar suporte para Enter no input
+    urlInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        form.dispatchEvent(new Event('submit'));
+      }
+    });
+
+    // Função para mostrar anúncio (será chamada pelo script de verificação)
+    function showAd() {
+      const adContainer = document.getElementById('adContainer');
+      if (adContainer) {
+        adContainer.style.display = 'block';
+      }
+    }
+
+    // Mostrar anúncio será controlado pelo script do Adsterra
+  </script>
+
+  <!-- Script do anúncio Adsterra (implementação corrigida) -->
+  <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+  
+  <script>
+    // Função para mostrar o anúncio após carregamento
+    function showAdAfterLoad() {
+      const adContainer = document.getElementById('adContainer');
+      if (adContainer) {
+        adContainer.style.display = 'block';
+        console.log('Container de anúncio exibido');
+        
+        // Verificar se o anúncio nativo carregou após 5 segundos
+        setTimeout(() => {
+          const nativeContainer = document.getElementById('container-34b49a846483ba0a3d10f74ef2ee93d5');
+          const fallbackAd = document.getElementById('fallback-ad');
+          
+          if (nativeContainer && nativeContainer.offsetHeight === 0) {
+            console.log('Anúncio nativo não carregou, mostrando fallback');
+            fallbackAd.style.display = 'block';
+          } else {
+            console.log('Anúncio nativo carregado com sucesso');
+          }
+        }, 5000);
+      }
+    }
+
+    // Verificar se o script do anúncio carregou
+    function checkAdScript() {
+      const scripts = document.querySelectorAll('script[src*="profitableratecpm.com"]');
+      if (scripts.length > 0) {
+        console.log('Script do anúncio Adsterra carregado');
+        setTimeout(showAdAfterLoad, 3000);
+      } else {
+        console.log('Script do anúncio não encontrado, tentando novamente...');
+        setTimeout(checkAdScript, 1000);
+      }
+    }
+
+    // Iniciar verificação após DOM carregar
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', checkAdScript);
+    } else {
+      checkAdScript();
+    }
+  </script>
+</body>
+</html>
+

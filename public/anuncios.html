@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wxt tools - Anúncios</title>
+    
+    <!-- CSS externo -->
+    <link rel="stylesheet" href="css/anuncios-style.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.ibb.co/fdLYFS49/logo.png">
+    
+    <!-- Meta tags para SEO -->
+    <meta name="description" content="Descubra ofertas exclusivas e conteúdo patrocinado selecionado especialmente para você.">
+    <meta name="keywords" content="anúncios, ofertas, promoções, conteúdo patrocinado">
+    
+    <!-- Open Graph para redes sociais -->
+    <meta property="og:title" content="wxt tools - Anúncios">
+    <meta property="og:description" content="Descubra ofertas exclusivas e conteúdo patrocinado selecionado especialmente para você.">
+    <meta property="og:image" content="https://i.ibb.co/fdLYFS49/logo.png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-section">
+                <img src="https://i.ibb.co/fdLYFS49/logo.png" alt="wxt tools Logo" class="logo">
+                <div class="brand-info">
+                    <h1 class="brand-name">wxt tools</h1>
+                    <span class="brand-subtitle">Anúncios</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="main.html" class="nav-link">
+                    <span class="nav-icon">🏠</span>
+                    <span>Início</span>
+                </a>
+                <a href="parcerias_adsterra_completo.html" class="nav-link">
+                    <span class="nav-icon">🤝</span>
+                    <span>Parcerias</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    <span class="hero-icon">💰</span>
+                    Ganhe Dinheiro Assistindo Anúncios!
+                </h1>
+                <div class="incentive-message">
+                    <div class="message-box">
+                        <h2 class="message-title">🎯 Como Ganhar:</h2>
+                        <ul class="instructions-list">
+                            <li>📺 <strong>Assista os anúncios</strong> - Role a página para baixo</li>
+                            <li>👆 <strong>Clique nos anúncios</strong> que mais interessar você</li>
+                            <li>💎 <strong>Ganhe moedas exclusivas</strong> por cada ação</li>
+                            <li>📱 <strong>Ao chegar em 10.000 moedas</strong> - tire um print e envie via WhatsApp</li>
+                        </ul>
+                        <div class="warning-note">
+                            <span class="warning-icon">⚠️</span>
+                            <strong>IMPORTANTE:</strong> Não saia da página! Se sair e voltar, perderá todo o progresso das moedas.
+                        </div>
+                        <div class="whatsapp-contact">
+                            <a href="https://wa.me/+258857270435" target="_blank" class="whatsapp-btn">
+                                <span class="whatsapp-icon">📱</span>
+                                <span>Enviar Print via WhatsApp</span>
+                            </a>
+                            <p class="contact-info">Contato: +258 857 270 435</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">∞</span>
+                        <span class="stat-label">Moedas Disponíveis</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Sempre Ativo</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Gratuito</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-card">
+                    <div class="card-icon">💰</div>
+                    <div class="card-text">Ganhe Moedas</div>
+                </div>
+                <div class="floating-card delay-1">
+                    <div class="card-icon">📱</div>
+                    <div class="card-text">WhatsApp</div>
+                </div>
+                <div class="floating-card delay-2">
+                    <div class="card-icon">🎁</div>
+                    <div class="card-text">Recompensas</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contador de Moedas Pop-up -->
+    <div id="coin-counter-popup" class="coin-popup">
+        <div class="coin-popup-content">
+            <div class="coin-icon">🪙</div>
+            <div class="coin-info">
+                <div class="coin-label">Suas Moedas</div>
+                <div class="coin-amount" id="coin-amount">0.000</div>
+            </div>
+            <div class="coin-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+                <div class="progress-text">Meta: 10.000</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pop-up de Notificação -->
+    <div id="notification-popup" class="notification-popup">
+        <div class="notification-content">
+            <div class="notification-icon">💰</div>
+            <div class="notification-text" id="notification-text">+0.001 moedas!</div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-container">
+            
+            <!-- Feed de Anúncios -->
+            <div class="ads-feed">
+                
+                <!-- Seção: Ofertas em Destaque -->
+                <section class="feed-section lazy-section" data-section="1">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="section-icon">⭐</span>
+                            Ofertas em Destaque
+                        </h2>
+                        <span class="section-badge">Novo</span>
+                    </div>
+                    
+                    <!-- Banner Nativo 1 -->
+                    <div class="ad-container featured clickable-ad">
+                        <div class="ad-label">Conteúdo Patrocinado - Clique para ganhar moedas!</div>
+                        <div class="native-ad-wrapper">
+                            <div class="ad-placeholder" id="ad-destaque-1">
+                                <!-- Banner nativo será inserido aqui -->
+                                <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+                                <div id="container-34b49a846483ba0a3d10f74ef2ee93d5"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção: Tecnologia -->
+                <section class="feed-section lazy-section" data-section="2" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="section-icon">💻</span>
+                            Tecnologia & Software
+                        </h2>
+                        <span class="section-badge">Popular</span>
+                    </div>
+                    
+                    <div class="content-grid">
+                        <!-- Card de Conteúdo 1 -->
+                        <article class="content-card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span class="placeholder-icon">🚀</span>
+                                </div>
+                                <div class="card-category">Tecnologia</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Ferramentas de Desenvolvimento</h3>
+                                <p class="card-description">
+                                    Descubra as melhores ferramentas para acelerar seu desenvolvimento.
+                                </p>
+                                <div class="card-meta">
+                                    <span class="meta-item">
+                                        <span class="meta-icon">👁️</span>
+                                        <span>2.5k visualizações</span>
+                                    </span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">⏰</span>
+                                        <span>2 horas atrás</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Banner Nativo 2 -->
+                        <div class="ad-container inline clickable-ad">
+                            <div class="ad-label">Patrocinado - Clique para ganhar moedas!</div>
+                            <div class="native-ad-wrapper">
+                                <div class="ad-placeholder" id="ad-tech-1">
+                                    <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+                                    <div id="container-34b49a846483ba0a3d10f74ef2ee93d5-2"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card de Conteúdo 2 -->
+                        <article class="content-card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span class="placeholder-icon">🎮</span>
+                                </div>
+                                <div class="card-category">Gaming</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Melhores Jogos 2025</h3>
+                                <p class="card-description">
+                                    Confira os lançamentos mais esperados do ano.
+                                </p>
+                                <div class="card-meta">
+                                    <span class="meta-item">
+                                        <span class="meta-icon">👁️</span>
+                                        <span>5.2k visualizações</span>
+                                    </span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">⏰</span>
+                                        <span>4 horas atrás</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- Seção: Educação -->
+                <section class="feed-section lazy-section" data-section="3" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="section-icon">📚</span>
+                            Educação & Cursos
+                        </h2>
+                        <span class="section-badge">Trending</span>
+                    </div>
+                    
+                    <!-- Banner Nativo 3 -->
+                    <div class="ad-container wide clickable-ad">
+                        <div class="ad-label">Conteúdo Patrocinado - Clique para ganhar moedas!</div>
+                        <div class="native-ad-wrapper">
+                            <div class="ad-placeholder" id="ad-education-1">
+                                <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+                                <div id="container-34b49a846483ba0a3d10f74ef2ee93d5-3"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="content-grid">
+                        <!-- Card de Conteúdo 3 -->
+                        <article class="content-card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span class="placeholder-icon">🎓</span>
+                                </div>
+                                <div class="card-category">Educação</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Cursos de Programação</h3>
+                                <p class="card-description">
+                                    Aprenda programação do zero com os melhores cursos online.
+                                </p>
+                                <div class="card-meta">
+                                    <span class="meta-item">
+                                        <span class="meta-icon">👁️</span>
+                                        <span>8.1k visualizações</span>
+                                    </span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">⏰</span>
+                                        <span>1 dia atrás</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Card de Conteúdo 4 -->
+                        <article class="content-card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span class="placeholder-icon">💼</span>
+                                </div>
+                                <div class="card-category">Carreira</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Dicas de Carreira</h3>
+                                <p class="card-description">
+                                    Como se destacar no mercado de trabalho atual.
+                                </p>
+                                <div class="card-meta">
+                                    <span class="meta-item">
+                                        <span class="meta-icon">👁️</span>
+                                        <span>3.7k visualizações</span>
+                                    </span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">⏰</span>
+                                        <span>6 horas atrás</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Banner Nativo 4 -->
+                        <div class="ad-container inline clickable-ad">
+                            <div class="ad-label">Patrocinado - Clique para ganhar moedas!</div>
+                            <div class="native-ad-wrapper">
+                                <div class="ad-placeholder" id="ad-career-1">
+                                    <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+                                    <div id="container-34b49a846483ba0a3d10f74ef2ee93d5-4"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Seção: Entretenimento -->
+                <section class="feed-section lazy-section" data-section="4" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="section-icon">🎬</span>
+                            Entretenimento
+                        </h2>
+                        <span class="section-badge">Hot</span>
+                    </div>
+                    
+                    <div class="content-grid">
+                        <!-- Card de Conteúdo 5 -->
+                        <article class="content-card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span class="placeholder-icon">🎵</span>
+                                </div>
+                                <div class="card-category">Música</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Top Músicas 2025</h3>
+                                <p class="card-description">
+                                    As músicas mais tocadas e tendências musicais do momento.
+                                </p>
+                                <div class="card-meta">
+                                    <span class="meta-item">
+                                        <span class="meta-icon">👁️</span>
+                                        <span>12.3k visualizações</span>
+                                    </span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">⏰</span>
+                                        <span>3 horas atrás</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Card de Conteúdo 6 -->
+                        <article class="content-card">
+                            <div class="card-image">
+                                <div class="image-placeholder">
+                                    <span class="placeholder-icon">📺</span>
+                                </div>
+                                <div class="card-category">Séries</div>
+                            </div>
+                            <div class="card-content">
+                                <h3 class="card-title">Séries Imperdíveis</h3>
+                                <p class="card-description">
+                                    Recomendações de séries que você precisa assistir.
+                                </p>
+                                <div class="card-meta">
+                                    <span class="meta-item">
+                                        <span class="meta-icon">👁️</span>
+                                        <span>9.8k visualizações</span>
+                                    </span>
+                                    <span class="meta-item">
+                                        <span class="meta-icon">⏰</span>
+                                        <span>5 horas atrás</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </article>
+
+                        <!-- Banner Nativo 5 -->
+                        <div class="ad-container inline clickable-ad">
+                            <div class="ad-label">Patrocinado - Clique para ganhar moedas!</div>
+                            <div class="native-ad-wrapper">
+                                <div class="ad-placeholder" id="ad-entertainment-1">
+                                    <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+                                    <div id="container-34b49a846483ba0a3d10f74ef2ee93d5-5"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Banner Final -->
+                <section class="feed-section lazy-section" data-section="5" style="display: none;">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <span class="section-icon">🎁</span>
+                            Ofertas Especiais
+                        </h2>
+                        <span class="section-badge">Limitado</span>
+                    </div>
+                    
+                    <!-- Banner Nativo Final -->
+                    <div class="ad-container featured final clickable-ad">
+                        <div class="ad-label">Conteúdo Patrocinado - Clique para ganhar moedas!</div>
+                        <div class="native-ad-wrapper">
+                            <div class="ad-placeholder" id="ad-final">
+                                <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+                                <div id="container-34b49a846483ba0a3d10f74ef2ee93d5-6"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Load More Button -->
+                <div class="load-more-section lazy-section" data-section="6" style="display: none;">
+                    <div class="completion-message">
+                        <h3>🎉 Parabéns! Você chegou ao final!</h3>
+                        <p>Continue rolando e clicando nos anúncios para ganhar mais moedas!</p>
+                    </div>
+                    <button class="load-more-btn" onclick="loadMoreContent()">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-text">Carregar Mais Conteúdo</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- Widget: Estatísticas -->
+                <div class="widget">
+                    <h3 class="widget-title">
+                        <span class="widget-icon">📊</span>
+                        Estatísticas
+                    </h3>
+                    <div class="stats-list">
+                        <div class="stat-row">
+                            <span class="stat-label">Anúncios Ativos</span>
+                            <span class="stat-value">127</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Visualizações Hoje</span>
+                            <span class="stat-value">45.2k</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Usuários Online</span>
+                            <span class="stat-value">1.8k</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Widget: Banner Lateral -->
+                <div class="widget ad-widget">
+                    <h3 class="widget-title">
+                        <span class="widget-icon">📢</span>
+                        Patrocinado
+                    </h3>
+                    <div class="sidebar-ad">
+                        <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+                        <div id="container-34b49a846483ba0a3d10f74ef2ee93d5-sidebar"></div>
+                    </div>
+                </div>
+
+                <!-- Widget: Links Rápidos -->
+                <div class="widget">
+                    <h3 class="widget-title">
+                        <span class="widget-icon">🔗</span>
+                        Links Rápidos
+                    </h3>
+                    <div class="quick-links">
+                        <a href="parcerias_adsterra_completo.html" class="quick-link">
+                            <span class="link-icon">🤝</span>
+                            <span>Parcerias</span>
+                        </a>
+                        <a href="main.html" class="quick-link">
+                            <span class="link-icon">🏠</span>
+                            <span>Página Inicial</span>
+                        </a>
+                        <a href="#" class="quick-link">
+                            <span class="link-icon">📞</span>
+                            <span>Contato</span>
+                        </a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4 class="footer-title">wxt tools</h4>
+                    <p class="footer-description">
+                        Sua fonte confiável para ofertas exclusivas e conteúdo patrocinado de qualidade.
+                    </p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Links</h4>
+                    <ul class="footer-links">
+                        <li><a href="main.html">Início</a></li>
+                        <li><a href="parcerias_adsterra_completo.html">Parcerias</a></li>
+                        <li><a href="anuncios.html">Anúncios</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-title">Contato</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Suporte</a></li>
+                        <li><a href="#">Política de Privacidade</a></li>
+                        <li><a href="#">Termos de Uso</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 wxt tools. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="js/anuncios-script.js"></script>
+</body>
+</html>
+

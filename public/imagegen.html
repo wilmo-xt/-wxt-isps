@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerar Imagem</title>
+</head>
+<body>
+  <h1>Gerar Imagem por Texto</h1>
+  <input type="text" id="prompt" placeholder="Descreva sua imagem..." />
+  <button onclick="gerarImagem()">Gerar</button>
+  <br><br>
+  <img id="imagem" width="400" />
+
+  <script>
+    async function gerarImagem() {
+      const prompt = document.getElementById('prompt').value;
+      const resposta = await fetch('/api/imagegen', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ prompt })
+      });
+
+      if (!resposta.ok) {
+        alert('Erro ao gerar imagem');
+        return;
+      }
+
+      const blob = await resposta.blob();
+      const url = URL.createObjectURL(blob);
+      document.getElementById('imagem').src = url;
+    }
+  </script>
+</body>
+</html>

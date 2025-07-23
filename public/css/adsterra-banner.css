@@ -1,0 +1,256 @@
+/* ========================================== */
+/* CSS ESPECÍFICO PARA BANNER NATIVO ADSTERRA */
+/* ========================================== */
+
+/* Container do banner nativo - totalmente discreto */
+.adsterra-native-container {
+    margin-top: 60px;
+    padding: 30px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    opacity: 0.7;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.adsterra-native-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.3), transparent);
+}
+
+.adsterra-native-container:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* Wrapper interno */
+.adsterra-wrapper {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 0 20px;
+}
+
+/* Título discreto */
+.adsterra-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 300;
+    position: relative;
+}
+
+.adsterra-label::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Container do anúncio */
+.adsterra-ad-wrapper {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 16px;
+    padding: 25px;
+    transition: all 0.4s ease;
+    position: relative;
+    backdrop-filter: blur(5px);
+}
+
+.adsterra-ad-wrapper:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Efeito de brilho sutil */
+.adsterra-ad-wrapper::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+    transition: left 0.8s ease;
+    border-radius: 16px;
+}
+
+.adsterra-ad-wrapper:hover::before {
+    left: 100%;
+}
+
+/* Estilização do conteúdo do anúncio */
+.adsterra-ad-content {
+    position: relative;
+    z-index: 2;
+}
+
+/* Responsividade para o banner */
+@media (max-width: 768px) {
+    .adsterra-native-container {
+        margin-top: 40px;
+        padding: 20px 0;
+    }
+    
+    .adsterra-wrapper {
+        padding: 0 15px;
+    }
+    
+    .adsterra-ad-wrapper {
+        padding: 20px;
+        border-radius: 12px;
+    }
+    
+    .adsterra-label {
+        font-size: 10px;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .adsterra-native-container {
+        margin-top: 30px;
+        padding: 15px 0;
+    }
+    
+    .adsterra-ad-wrapper {
+        padding: 15px;
+        border-radius: 10px;
+    }
+    
+    .adsterra-label {
+        font-size: 9px;
+        letter-spacing: 1px;
+    }
+}
+
+/* Animação de entrada suave */
+.adsterra-native-container {
+    animation: fadeInBanner 1.2s ease 2s both;
+}
+
+@keyframes fadeInBanner {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 0.7;
+        transform: translateY(0);
+    }
+}
+
+/* Estilização específica para diferentes tipos de banner do Adsterra */
+
+/* Banner horizontal (728x90) */
+.adsterra-banner-728x90 {
+    max-width: 728px;
+    margin: 0 auto;
+}
+
+/* Banner quadrado (300x250) */
+.adsterra-banner-300x250 {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+/* Banner responsivo */
+.adsterra-banner-responsive {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Ocultar overflow para evitar problemas de layout */
+.adsterra-ad-wrapper iframe {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+/* Estilo para texto de anúncio nativo */
+.adsterra-native-text {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: left;
+    margin-bottom: 15px;
+}
+
+.adsterra-native-title {
+    color: #667eea;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.adsterra-native-cta {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(102, 126, 234, 0.1));
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    color: #667eea;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.adsterra-native-cta:hover {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(102, 126, 234, 0.2));
+    border-color: rgba(102, 126, 234, 0.5);
+    transform: translateY(-1px);
+}
+
+/* Garantir que o banner não quebre o layout */
+.adsterra-native-container * {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Prevenção de conflitos com outros estilos */
+.adsterra-native-container {
+    isolation: isolate;
+}
+
+/* Estilo para loading do banner */
+.adsterra-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 12px;
+}
+
+.adsterra-loading::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-top: 2px solid rgba(102, 126, 234, 0.5);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+

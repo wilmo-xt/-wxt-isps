@@ -12,6 +12,8 @@ const newsRoutes = require('./routes/news.routes');
 const youtubeRoutes = require('./routes/youtube.routes');
 const translateRoutes = require('./routes/translate.routes');
 const geminiRoute = require('./routes/gemini');
+const imageGenRoute = require('./routes/imagegen.routes');
+const downloadRoutes = require('./routes/download.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3020;
@@ -48,8 +50,9 @@ app.use(weatherRoutes);
 app.use(newsRoutes);
 app.use(youtubeRoutes);
 app.use(translateRoutes);
-
 app.use(geminiRoute);
+app.use(imageGenRoute);
+app.use(downloadRoutes);
 
 
 // Rota principal - servir a tela inicial
@@ -124,6 +127,21 @@ app.get('/parcerias.html', (req, res) => {
 // Rota para página de conversas
 app.get('/conversas.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'conversas.html'));
+});
+
+// Rota para página de anúncios 
+app.get('/anuncios.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'anuncios.html'));
+});
+
+// Rota para página de geração de imagens
+app.get('/imagegen.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'imagegen.html'));
+});
+
+// Rota para página de download 
+app.get('/download.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'download.html'));
 });
 
 // Middleware de tratamento de erros do multer
