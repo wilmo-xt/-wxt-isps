@@ -16,13 +16,48 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://wxt-isps.vercel.app/criador.html</loc>
+    <loc>https://wxt-isps.vercel.app/ocr.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://wxt-isps.vercel.app/login.html</loc>
+    <loc>https://wxt-isps.vercel.app/news.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://wxt-isps.vercel.app/download.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://wxt-isps.vercel.app/creator.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wxt-isps.vercel.app/anuncios.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://wxt-isps.vercel.app/chat.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://wxt-isps.vercel.app/translate.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://wxt-isps.vercel.app/youtube.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://wxt-isps.vercel.app/weather.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
   </url>
 </urlset>
