@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+   "nayan-api-servers": "latest",
     "axios": "^1.10.0",
     "bing-translate-api": "^4.1.0",
     "dotenv": "*",

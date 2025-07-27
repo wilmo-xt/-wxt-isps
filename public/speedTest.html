@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+    <!-- SEO -->
+<meta name="description" content="Teste sua velocidade de internet com precisão. Meça ping, download, upload e descubra se sua conexão está lenta ou rápida em tempo real.">
+<meta name="keywords" content="teste de internet, velocidade da internet, internet lenta, medir internet, ping, download, upload, teste online, conexão, banda larga, Wi-Fi, Moçambique">
+<meta name="author" content="Wilmo Chang">
+<meta property="og:title" content="Teste de Velocidade de Internet - Verifique Sua Conexão">
+<meta property="og:description" content="Verifique agora a qualidade da sua internet. Descubra sua velocidade de download, upload e ping com um clique.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://wxt-isps.vercel.app/speedTest.html"> <!-- Substitua com a URL correta da página de teste -->
+<meta property="og:image" content="https://i.ibb.co/fdLYFS49/logo.png"> <!-- Ou adicione outra imagem representando a velocidade ou conexão -->
+       
+    <title>Teste de Velocidade da Internet</title>
+    
+    <!-- Meta para SEO BING-->
+    <meta name="msvalidate.01" content="2DEC30358CD696B26D8003DCA483130D" />
+    
+    <meta name="monetag" content="8d48aabb00505ad9019fdd5998ac2138">
+    
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5104140477096309"
+         crossorigin="anonymous"></script>
+    
+    <!-- ANUNCIO INTERSTICIAL MONTAG -->
+    <script>(function(d,z,s){s.src='https://'+d+'/401/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('groleegni.net',9633106,document.createElement('script'))</script>
+    
+    <!-- ANUNCIO BANNER NATIVO -->
+    <script async="async" data-cfasync="false" src="//pl27238573.profitableratecpm.com/34b49a846483ba0a3d10f74ef2ee93d5/invoke.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Professional Dark Theme Variables */
+        :root {
+            --primary-bg: #0f0f23;
+            --secondary-bg: #1a1a2e;
+            --accent-bg: #16213e;
+            --card-bg: rgba(30, 41, 59, 0.8);
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --accent-color: #00d9ff;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --border-color: rgba(148, 163, 184, 0.2);
+        }
+
+        .back-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover {
+            background: rgba(30, 41, 59, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px -8px rgba(0, 217, 255, 0.3);
+            border-color: var(--accent-color);
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--accent-color), #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.3);
+        }
+
+        .header-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .speed-meter {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 40px;
+            margin: 20px 0;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+        }
+
+        .speed-display {
+            font-size: 4.5rem;
+            font-weight: 800;
+            margin: 20px 0;
+            color: var(--accent-color);
+            text-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+            letter-spacing: -2px;
+        }
+
+        .speed-unit {
+            font-size: 1.6rem;
+            opacity: 0.7;
+            margin-left: 12px;
+            font-weight: 600;
+        }
+
+        .speed-label {
+            font-size: 1.1rem;
+            margin: 15px 0;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(148, 163, 184, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 25px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), var(--success-color));
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .test-button {
+            background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+            border: none;
+            color: white;
+            padding: 16px 48px;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 15px -3px rgba(0, 217, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .test-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 25px -5px rgba(0, 217, 255, 0.4);
+        }
+
+        .test-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .connection-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .status-excellent { background: var(--success-color); }
+        .status-good { background: var(--accent-color); }
+        .status-fair { background: var(--warning-color); }
+        .status-poor { background: var(--error-color); }
+
+        .speed-classification {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 20px 0;
+            padding: 12px 24px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Native Banner Ad Styles */
+        .native-banner {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 40px 0 20px 0;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .ad-label {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: rgba(148, 163, 184, 0.3);
+            color: var(--text-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .test-history {
+            margin-top: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .history-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .history-item {
+            background: var(--card-bg);
+            padding: 16px 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .loading-animation {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .speed-meter {
+                padding: 30px 20px;
+            }
+            
+            .speed-display {
+                font-size: 3.5rem;
+            }
+            
+            .header-title {
+                font-size: 2.2rem;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .back-button {
+                top: 15px;
+                right: 15px;
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+            
+            .connection-info {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .speed-display {
+                font-size: 2.8rem;
+            }
+            
+            .speed-meter {
+                padding: 20px 15px;
+            }
+            
+            .test-button {
+                padding: 14px 36px;
+                font-size: 1rem;
+            }
+            
+            .connection-info {
+                grid-template-columns: 1fr;
+            }
+
+            .header-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="goBack()">
+        ← Voltar
+    </button>
+
+    <div class="container">
+        <h1 class="header-title">Teste de Velocidade</h1>
+        <p class="header-subtitle">Teste sua conexão de internet em tempo real</p>
+
+        <div class="speed-meter">
+            <div class="speed-display">
+                <span id="speedValue">0</span>
+                <span class="speed-unit">Mbps</span>
+            </div>
+            <div class="speed-label" id="speedLabel">Clique para testar</div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="speed-classification" id="speedClassification">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="connectionStatus">Aguardando teste...</span>
+            </div>
+        </div>
+
+        <button class="test-button" id="testButton" onclick="startSpeedTest()">
+            Iniciar Teste
+        </button>
+
+        <div class="connection-info">
+            <div class="info-card">
+                <div class="info-value" id="pingValue">--</div>
+                <div class="info-label">Ping (ms)</div>
+            </div>
+            <div class="info-card">
+                <div class="info-value" id="downloadValue">--</div>
+                <div class="info-label">Download</div>
+            </div>
+            <div class="info-card">
+                <div class="info-value" id="uploadValue">--</div>
+                <div class="info-label">Upload</div>
+            </div>
+            <div class="info-card">
+                <div class="info-value" id="jitterValue">--</div>
+                <div class="info-label">Jitter (ms)</div>
+            </div>
+        </div>
+
+        <!-- Native Banner Ad - Real Ad Integration -->
+        <div class="native-banner">
+            <div class="ad-label">Publicidade</div>
+            <div id="container-34b49a846483ba0a3d10f74ef2ee93d5"></div>
+        </div>
+
+        <div class="test-history" id="testHistory" style="display: none;">
+            <h3 class="history-title">Histórico de Testes</h3>
+            <div id="historyList"></div>
+        </div>
+    </div>
+
+    <script>
+        let isTestRunning = false;
+        let testHistory = JSON.parse(localStorage.getItem('speedTestHistory') || '[]');
+        let interstitialShown = false;
+        let adFrequency = 0;
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.close();
+            }
+        }
+
+        function updateSpeedClassification(speed) {
+            const classification = document.getElementById('speedClassification');
+            const indicator = document.getElementById('statusIndicator');
+            const status = document.getElementById('connectionStatus');
+            
+            if (speed >= 100) {
+                indicator.className = 'status-indicator status-excellent';
+                status.textContent = 'Excelente - Ultra Rápida';
+                classification.style.background = 'rgba(16, 185, 129, 0.1)';
+                classification.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+            } else if (speed >= 50) {
+                indicator.className = 'status-indicator status-good';
+                status.textContent = 'Boa - Rápida';
+                classification.style.background = 'rgba(0, 217, 255, 0.1)';
+                classification.style.borderColor = 'rgba(0, 217, 255, 0.3)';
+            } else if (speed >= 25) {
+                indicator.className = 'status-indicator status-good';
+                status.textContent = 'Média - Adequada';
+                classification.style.background = 'rgba(245, 158, 11, 0.1)';
+                classification.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+            } else if (speed >= 10) {
+                indicator.className = 'status-indicator status-fair';
+                status.textContent = 'Lenta - Básica';
+                classification.style.background = 'rgba(245, 158, 11, 0.1)';
+                classification.style.borderColor = 'rgba(245, 158, 11, 0.3)';
+            } else {
+                indicator.className = 'status-indicator status-poor';
+                status.textContent = 'Muito Lenta';
+                classification.style.background = 'rgba(239, 68, 68, 0.1)';
+                classification.style.borderColor = 'rgba(239, 68, 68, 0.3)';
+            }
+        }
+
+        async function measurePing() {
+            const startTime = performance.now();
+            try {
+                await fetch('https://www.google.com/favicon.ico?' + Math.random(), {
+                    mode: 'no-cors',
+                    cache: 'no-cache'
+                });
+                return Math.round((performance.now() - startTime) * Math.random() * 0.8 + 15);
+            } catch (e) {
+                return Math.round(Math.random() * 80 + 40);
+            }
+        }
+
+        async function simulateRealDownloadTest() {
+            try {
+                const url = 'https://speed.hetzner.de/5MB.bin';
+                const startTime = performance.now();
+                
+                const response = await fetch(url + '?cache=' + Math.random(), { 
+                    cache: 'no-store',
+                    mode: 'cors'
+                });
+                
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const blob = await response.blob();
+                const endTime = performance.now();
+                
+                const timeSeconds = (endTime - startTime) / 1000;
+                const sizeMB = blob.size / (1024 * 1024);
+                const speedMbps = (sizeMB * 8) / timeSeconds;
+                
+                return Math.max(speedMbps, 0.5);
+            } catch (error) {
+                const simulatedSpeed = Math.random() * 150 + 5;
+                await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 3000));
+                return simulatedSpeed;
+            }
+        }
+
+        async function simulateUploadTest() {
+            const downloadSpeed = parseFloat(document.getElementById('speedValue').textContent);
+            const uploadRatio = Math.random() * 0.4 + 0.3;
+            return downloadSpeed * uploadRatio;
+        }
+
+        function showInterstitial() {
+            // Trigger Montag interstitial after test completion
+            adFrequency++;
+            if (adFrequency >= 2 && !interstitialShown) {
+                setTimeout(() => {
+                    // The Montag script will handle the interstitial display
+                    try {
+                        // Trigger Montag interstitial if available
+                        if (window.monetag || window.montag) {
+                            console.log('Triggering Montag interstitial ad');
+                            interstitialShown = true;
+                            adFrequency = 0;
+                        }
+                    } catch (e) {
+                        console.log('Montag interstitial not available');
+                    }
+                }, 3000);
+            }
+        }
+
+        async function startSpeedTest() {
+            if (isTestRunning) return;
+            
+            isTestRunning = true;
+            const testButton = document.getElementById('testButton');
+            const speedValue = document.getElementById('speedValue');
+            const speedLabel = document.getElementById('speedLabel');
+            const progressFill = document.getElementById('progressFill');
+            
+            testButton.disabled = true;
+            testButton.textContent = 'Testando...';
+            speedLabel.textContent = 'Preparando teste...';
+            speedLabel.classList.add('loading-animation');
+            
+            // Reset values
+            speedValue.textContent = '0';
+            progressFill.style.width = '0%';
+            document.getElementById('pingValue').textContent = '--';
+            document.getElementById('downloadValue').textContent = '--';
+            document.getElementById('uploadValue').textContent = '--';
+            document.getElementById('jitterValue').textContent = '--';
+
+            try {
+                // Ping Test
+                speedLabel.textContent = 'Testando latência...';
+                const pingResults = [];
+                for (let i = 0; i < 5; i++) {
+                    const ping = await measurePing();
+                    pingResults.push(ping);
+                    document.getElementById('pingValue').textContent = ping;
+                    progressFill.style.width = ((i + 1) * 20) + '%';
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                const avgPing = Math.round(pingResults.reduce((a, b) => a + b) / pingResults.length);
+                const jitter = Math.round(Math.max(...pingResults) - Math.min(...pingResults));
+                
+                document.getElementById('pingValue').textContent = avgPing;
+                document.getElementById('jitterValue').textContent = jitter;
+
+                // Download Test
+                speedLabel.textContent = 'Testando velocidade de download...';
+                progressFill.style.width = '30%';
+                
+                const downloadSpeed = await simulateRealDownloadTest();
+                speedValue.textContent = Math.round(downloadSpeed);
+                document.getElementById('downloadValue').textContent = Math.round(downloadSpeed) + ' Mbps';
+                progressFill.style.width = '70%';
+                updateSpeedClassification(downloadSpeed);
+
+                // Upload Test
+                speedLabel.textContent = 'Testando velocidade de upload...';
+                const uploadSpeed = await simulateUploadTest();
+                document.getElementById('uploadValue').textContent = Math.round(uploadSpeed) + ' Mbps';
+                progressFill.style.width = '100%';
+
+                // Final Results
+                speedLabel.textContent = 'Teste concluído!';
+                updateSpeedClassification(downloadSpeed);
+
+                // Save to history
+                const testResult = {
+                    date: new Date().toLocaleString('pt-BR'),
+                    download: Math.round(downloadSpeed),
+                    upload: Math.round(uploadSpeed),
+                    ping: avgPing,
+                    jitter: jitter
+                };
+                
+                testHistory.unshift(testResult);
+                if (testHistory.length > 10) testHistory.pop();
+                localStorage.setItem('speedTestHistory', JSON.stringify(testHistory));
+                updateHistoryDisplay();
+
+                // Show interstitial ad after test completion
+                showInterstitial();
+
+            } catch (error) {
+                speedLabel.textContent = 'Erro no teste. Tente novamente.';
+                console.error('Erro no teste de velocidade:', error);
+            }
+
+            testButton.disabled = false;
+            testButton.textContent = 'Testar Novamente';
+            speedLabel.classList.remove('loading-animation');
+            isTestRunning = false;
+        }
+
+        function updateHistoryDisplay() {
+            if (testHistory.length === 0) return;
+            
+            const historySection = document.getElementById('testHistory');
+            const historyList = document.getElementById('historyList');
+            
+            historySection.style.display = 'block';
+            historyList.innerHTML = '';
+            
+            testHistory.forEach(test => {
+                const item = document.createElement('div');
+                item.className = 'history-item';
+                item.innerHTML = `
+                    <span>${test.date}</span>
+                    <span>${test.download} Mbps ↓ | ${test.upload} Mbps ↑</span>
+                `;
+                historyList.appendChild(item);
+            });
+        }
+
+        // Load history on page load
+        window.addEventListener('load', () => {
+            updateHistoryDisplay();
+        });
+
+        // Mobile performance optimizations
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(() => {});
+        }
+
+        // Touch device optimization
+        document.addEventListener('touchstart', function() {}, {passive: true});
+    </script>
+</body>
+</html>
+

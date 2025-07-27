@@ -15,6 +15,7 @@ const geminiRoute = require('./routes/gemini');
 const imageGenRoute = require('./routes/imagegen.routes');
 const downloadRoutes = require('./routes/download.routes');
 
+
 const app = express();
 const PORT = process.env.PORT || 3020;
 
@@ -53,7 +54,6 @@ app.use(translateRoutes);
 app.use(geminiRoute);
 app.use(imageGenRoute);
 app.use(downloadRoutes);
-
 
 // Rota principal - servir a tela inicial
 app.get('/', (req, res) => {
@@ -143,6 +143,12 @@ app.get('/imagegen.html', (req, res) => {
 app.get('/download.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'download.html'));
 });
+
+// Rota para página de texte de velocidade internet 
+app.get('/speedTest.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'speedTest.html'));
+});
+
 
 // Middleware de tratamento de erros do multer
 app.use((error, req, res, next) => {
