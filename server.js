@@ -14,7 +14,7 @@ const translateRoutes = require('./routes/translate.routes');
 const geminiRoute = require('./routes/gemini');
 const imageGenRoute = require('./routes/imagegen.routes');
 const downloadRoutes = require('./routes/download.routes');
-
+const aptoideRoutes = require('./routes/aptoide.routes');
 
 const app = express();
 const PORT = process.env.PORT || 3020;
@@ -54,6 +54,7 @@ app.use(translateRoutes);
 app.use(geminiRoute);
 app.use(imageGenRoute);
 app.use(downloadRoutes);
+app.use(aptoideRoutes);
 
 // Rota principal - servir a tela inicial
 app.get('/', (req, res) => {
@@ -149,6 +150,10 @@ app.get('/speedTest.html', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'speedTest.html'));
 });
 
+// Rota para página de Aptoide 
+app.get('/aptoide.html', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'aptoide.html'));
+});
 
 // Middleware de tratamento de erros do multer
 app.use((error, req, res, next) => {
